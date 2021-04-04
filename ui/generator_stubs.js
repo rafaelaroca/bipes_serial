@@ -290,13 +290,15 @@ Blockly.Python['mpu6050_read_gyro_z'] = function(block) {
 Blockly.Python['init_oled'] = function(block) {
   var scl = Blockly.Python.valueToCode(block, 'scl', Blockly.Python.ORDER_ATOMIC);
   var sda = Blockly.Python.valueToCode(block, 'sda', Blockly.Python.ORDER_ATOMIC);
+  var i2c = Blockly.Python.valueToCode(block, 'i2c', Blockly.Python.ORDER_ATOMIC);
+
 
   Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
   Blockly.Python.definitions_['import_oled_a'] = 'from machine import I2C';
   Blockly.Python.definitions_['import_ssd'] = 'import ssd1306';
   Blockly.Python.definitions_['import_sleep'] = 'from time import sleep';
 
-  var code = 'i2c=I2C(-1, scl=Pin(' + scl + '), sda=Pin(' + sda + '))\n';
+  var code = 'i2c=I2C(' + i2c + ', scl=Pin(' + scl + '), sda=Pin(' + sda + '))\n';
       code += 'oled_width = 128\n';
       code += 'oled_height = 64\n';
       code += 'oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)\n';
@@ -4027,6 +4029,24 @@ Blockly.Python['stop_timer'] = function(block) {
   return code;
 };
 
+
+Blockly.Python['thread'] = function(block) {
+
+  var interval = block.getFieldValue('interval');
+  var timerNumber = block.getFieldValue('timerNumber');
+  var statements_name = Blockly.Python.statementToCode(block, 'statements');
+  
+  Blockly.Python.definitions_['import_thread'] = 'import _thread';
+
+  Blockly.Python.definitions_['import_timer_callback' + timerNumber] = '\n#Thread function \ndef thread' + timerNumber + '():\n' + statements_name + '\n\n'; 
+
+  var code = '_thread.start_new_thread(thread' + timerNumber + ', ())\n';
+             
+  return code;
+};
+
+
+
 Blockly.Python['timer'] = function(block) {
 
   var interval = block.getFieldValue('interval');
@@ -4036,12 +4056,29 @@ Blockly.Python['timer'] = function(block) {
   Blockly.Python.definitions_['import_timer'] = 'from machine import Timer';
   Blockly.Python.definitions_['import_timer_start' + timerNumber] = 'tim' + timerNumber + '=Timer(' + timerNumber + ')'; //-1)';
 
-  Blockly.Python.definitions_['import_timer_callback' + timerNumber] = '\n#Timer Function Callback\ndef timerFunc' + timerNumber + '(t):\n\t' + statements_name + '\n\n'; 
+  Blockly.Python.definitions_['import_timer_callback' + timerNumber] = '\n#Timer Function Callback\ndef timerFunc' + timerNumber + '(t):\n' + statements_name + '\n\n'; 
 
   var code = 'tim' + timerNumber + '.init(period=' + interval + ', mode=Timer.PERIODIC, callback=timerFunc' + timerNumber + ')\n';
              
   return code;
 };
+
+Blockly.Python['pico_timer'] = function(block) {
+
+  var interval = block.getFieldValue('interval');
+  var timerNumber = block.getFieldValue('timerNumber');
+  var statements_name = Blockly.Python.statementToCode(block, 'statements');
+  
+  Blockly.Python.definitions_['import_timer'] = 'from machine import Timer';
+  Blockly.Python.definitions_['import_timer_start'] = 'tim=Timer()'; //-1)';
+
+  Blockly.Python.definitions_['import_timer_callback'] = '\n#Timer Function Callback\ndef timerFunc(t):\n' + statements_name + '\n\n'; 
+
+  var code = 'tim.init(period=' + interval + ', mode=Timer.PERIODIC, callback=timerFunc)\n';
+             
+  return code;
+};
+
 
 
 Blockly.Python['deep_sleep8266'] = function(block) {

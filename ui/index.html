@@ -397,7 +397,8 @@ document.body.appendChild(el);
 
   <div id="content_programs" class="content">
 	  <center>
-	  <iframe src="https://bipes-271213.appspot.com/list" width="100%" height="500" frameBorder="0"></iframe>
+		      <iframe src="shared.html" width="100%" height="500" frameBorder="0"></iframe>
+
 	  </center>
   </div>
 
@@ -423,6 +424,8 @@ document.body.appendChild(el);
 
 <div style="width: 50%; float:left">
 	<center>
+		<font color=red>Important:</font> this tab features are fully functional in the network version, but in development in the USB/Serial (beta2serial) BIPES version.
+	<br>
  Text editor for files in device's filesystem:
 	</center>
 		    <br>
@@ -452,6 +455,7 @@ document.body.appendChild(el);
 	  <center>
 Device file manager
 <br>
+
   <div id="file-boxes" style="display:inline-block; vertical-align:top; width:230px;">
 
             <input type="button" value="Run Blocks" onclick="runPython(); return false;" />
@@ -1020,6 +1024,13 @@ Device file manager
 
 
     <block type="init_oled">
+
+ <value name="i2c">
+        <shadow type="math_number">
+          <field name="NUM">-1</field>
+        </shadow>
+      </value>
+
 
  <value name="scl">
         <shadow type="math_number">

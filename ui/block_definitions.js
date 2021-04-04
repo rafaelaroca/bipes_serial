@@ -171,6 +171,40 @@ Blockly.Blocks['get_rtc'] = {
   }
 };
 
+Blockly.Blocks['pico_timer'] = {
+  init: function() {
+    this.setColour(135);
+    this.appendDummyInput()
+        .appendField("RPI Pico Timer ")
+        .appendField(" Interval (ms): ")
+        .appendField(new Blockly.FieldTextInput("1000"), "interval");
+    this.appendStatementInput("statements")
+        .setCheck("image");
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip('');
+  }
+};
+
+
+Blockly.Blocks['thread'] = {
+  init: function() {
+    this.setColour(135);
+    this.appendDummyInput()
+        .appendField("Thread # ")
+        .appendField(new Blockly.FieldTextInput("0"), "timerNumber")
+        .appendField(" Interval (ms): ")
+        .appendField(new Blockly.FieldTextInput("1000"), "interval");
+    this.appendStatementInput("statements")
+        .setCheck("image");
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip('');
+  }
+};
+
+
+
 
 Blockly.Blocks['timer'] = {
   init: function() {
@@ -610,6 +644,11 @@ Blockly.Blocks['init_oled'] = {
         55,
         "*"));
         //.setAlign(Blockly.ALIGN_CENTRE);
+	  
+    this.appendValueInput("i2c")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("I2C");
 
     this.appendValueInput("scl")
         .setCheck("Number")
@@ -8609,7 +8648,6 @@ Blockly.Blocks['char_lcd_putstr'] = {
         .appendField("Write text on LCD");
 
     this.appendValueInput("text")
-        .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Text");
 
