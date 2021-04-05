@@ -3936,10 +3936,11 @@ async function getReader() {
       }
 
       function sendSerialHello() {
-	serialWrite("\nmachine.soft_reset()\n\n");
-	serialWrite('\x13');
-	serialWrite('\x10');
+	//serialWrite("\nmachine.soft_reset()\n\n");
+	serialWrite('\x03');
+	serialWrite('\x03');
 	}
+
 
 </script>
 </html>
