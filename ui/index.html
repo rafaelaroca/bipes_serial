@@ -62,12 +62,13 @@
   <script src="python_compressed.js"></script>
   <script src="arduino_compressed.js"></script>
   <script src="code.js"></script>
+  <script src="ui.js"></script>
 
-  <!-- Custom Blocks for BIPES Project --> 
+  <!-- Custom Blocks for BIPES Project -->
   <script src="block_definitions.js"></script> <!-- Rafael 24/03/2020 -->
   <script src="generator_stubs.js"></script> <!-- Rafael 24/03/2020 -->
 
-  <!-- WebREPL part --> 
+  <!-- WebREPL part -->
   <script src="term.js"></script>
   <script src="FileSaver.js"></script>
 
@@ -100,39 +101,20 @@ document.body.appendChild(el);
 
   <table width="100%" height="100%">
     <tr>
-      <td>
-        <h1>
-		<span id="title"><a href=http://www.bipes.net.br>BIPES</a> Beta (<a href=https://bipes.net.br/beta2serial/ui/>USB/Serial</a> | <a href=http://bipes.net.br/beta2/ui/>Network</a>)</span>
-        </h1>
-      </td>
-      <td class="farSide">
-        <select id="languageMenu"></select>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=2>
-        <table width="100%">
-          <tr id="tabRow" height="1em">
-            <td id="tab_blocks" class="tabon">...</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_console" class="taboff">Console</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_python" class="taboff">Python</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_files" class="taboff">Files</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_programs" class="taboff">Shared</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_device" class="taboff">Device</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_iot" class="taboff">IOT</td>
-            <td class="tabmin">&nbsp;</td>
-            <td id="tab_mqtt" class="taboff" onclick='document.getElementById("easymqtt_iframe").contentWindow.startEasyMQTT(window.easyMQTT_session);'>EasyMQTT</td>
-            <td class="tabmin">&nbsp;</td>
+      <td colspan=2 class="top-menu">
 
-            <td id="tab_xml" class="taboff">XML</td>
-
-            <td class="tabmax">
+            <div class="logo">BIPES</div>
+            <div class="tabs">
+                <div id="tab_blocks" class="tabon">...</div>
+                <div id="tab_console" class="taboff">Console</div>
+                <div id="tab_python" class="taboff">Python</div>
+                <div id="tab_files" class="taboff">Files</div>
+                <div id="tab_programs" class="taboff">Shared</div>
+                <div id="tab_device" class="taboff">Device</div>
+                <div id="tab_iot" class="taboff">IOT</div>
+                <div id="tab_mqtt" class="taboff" onclick='document.getElementById("easymqtt_iframe").contentWindow.startEasyMQTT(window.easyMQTT_session);'>EasyMQTT</div>
+                <div id="tab_xml" class="taboff">XML</div>
+            </div>
 
 	<script>
 
@@ -277,7 +259,11 @@ document.body.appendChild(el);
 			}
 		}
 	</script>
-		     Target device:
+  <div class="toolbar">
+    <div id="serial_network">
+    <a class="icon selected" id="serialButton" href="../../beta2serial/ui" title="..."></a><a class="icon" id="networkButton" href="../../beta2/ui" title="..."></a>
+    </div>
+    <div class="icon" id="deviceSelect">
 			<select id="device_selector" onchange="changeDevice(this.value)">
 			  <option value="ESP8266">ESP8266</option>
 			  <option value="ESP32">ESP32</option>
@@ -297,33 +283,22 @@ document.body.appendChild(el);
 			  <option value="BBC">BBC Microbit</option>
 			  <option value="EV3">Lego EV3</option>
 			</select>
+      <button id="runButton" class="notext primary icon" title="..."></button>
+    </div>
 
-              <button id="runButton" class="notext primary" title="...">
-                <img src='media/1x1.gif' class="run icon21">
-              </button>
-               <button id="linkButton" class="notext" title="...">
-                <img src='media/1x1.gif' class="link icon21">
-              </button>
+      <button id="linkButton" class="notext icon" title="..."></button>
 
-               <button id="saveButton" class="notext" title="...">
-                <img src='media/1x1.gif' class="save icon22">
-              </button>
+      <button id="saveButton" class="notext icon" title="..."></button>
 
-               <button id="loadButton" class="notext" title="...">
-                <img src='media/1x1.gif' class="load icon22">
-              </button>
+      <button id="loadButton" class="notext icon" title="..."></button>
 
-              <button id="trashButton" class="notext" title="...">
-                <img src='media/1x1.gif' class="trash icon21">
-              </button>
+      <button id="trashButton" class="notext icon" title="..."></button>
 
+      <button id="languageButton" class="notext icon" title="..."></button>
 
-
-
-            </td>
-          </tr>
-        </table>
-      </td>
+      <button id="notificationButton" class="notext icon" title="..."></button>
+    </div>
+    </td>
     </tr>
     <tr>
       <td height="99%" colspan=2 id="content_area">
@@ -339,8 +314,8 @@ document.body.appendChild(el);
         <input type="submit" id="button" value="Connect" disabled onclick="button_click(); return false;" />
 	<button id="SerialConnectButton" type="button" disabled>Connect (Web Serial)</button>
         </form>
-        
-        
+
+
         <div style="display:inline-block; vertical-align:top; ">
             <div id="term">
             </div>
@@ -485,7 +460,7 @@ Device file manager
 		  </div>
 
 </div>
-	   
+
 
 <!-- ################################################## -->
 
@@ -633,7 +608,7 @@ Device file manager
         </value>
       </block>
       <block type="math_random_float"></block>
-      <block type="var_to_int">  
+      <block type="var_to_int">
         <field name="VAR">to int</field>
       </block>
     </category>
@@ -713,7 +688,7 @@ Device file manager
           </shadow>
         </value>
       </block>
-      <block type="text_to_str">  
+      <block type="text_to_str">
         <field name="VAR">to str</field>
       </block>
     </category>
@@ -812,7 +787,7 @@ Device file manager
         </shadow>
       </value>
 
-    
+
     </block>
 
     <block type="exec_python_output">
@@ -869,7 +844,7 @@ Device file manager
       </value>
 
 
-    
+
     </block>
 
     <block type="deep_sleep8266">
@@ -908,7 +883,7 @@ Device file manager
     <block type="reset_cause_wdt"></block>
     <block type="reset_cause_deep"></block>
       </category>
-    
+
       <category name="In/Out Pins">
       <label text="In/Out Pins"></label>
     <block type="gpio_set">
@@ -963,9 +938,9 @@ Device file manager
         </shadow>
       </value>
 
-    
-    
-    
+
+
+
     </block>
   </category>
 
@@ -992,7 +967,7 @@ Device file manager
             <field name="SDA"></field>
           </shadow>
         </value>
- 
+
 	 <value name="lines">
         <shadow type="math_number">
           <field name="NUM">4</field>
@@ -1007,7 +982,7 @@ Device file manager
 
 
 
- 
+
 	</block>
 	<block type="char_lcd_clear"></block>
 	<block type="char_lcd_putstr"></block>
@@ -1045,7 +1020,7 @@ Device file manager
       </value>
 
 
-    
+
     </block>
     <block type="write_oled">
 
@@ -1068,7 +1043,7 @@ Device file manager
       </value>
 
 
-    
+
     </block>
     <block type="clear_oled"></block>
     <block type="fill_oled"></block>
@@ -1356,7 +1331,7 @@ Device file manager
             <field name="NUM">10000</field>
           </shadow>
         </value>
- 
+
       </block>
       </category>
 
@@ -1374,7 +1349,7 @@ Device file manager
             <field name="SCK"></field>
           </shadow>
         </value>
- 
+
         <value name="mosi">
           <shadow type="pinout">
             <field name="MOSI"></field>
@@ -1386,13 +1361,13 @@ Device file manager
             <field name="MISO"></field>
           </shadow>
         </value>
- 
+
         <value name="rst">
           <shadow type="pinout">
             <field name="RST"></field>
           </shadow>
         </value>
- 
+
         <value name="cs">
           <shadow type="pinout">
             <field name="RST"></field>
@@ -1531,11 +1506,11 @@ Device file manager
 
       </category>
   </category>
- 
- 
+
+
   <category name="Files">
       <label text="Read and write files"></label>
-<block type="file_open_write"> 
+<block type="file_open_write">
 
   <value name="filename">
         <shadow type="text">
@@ -1544,7 +1519,7 @@ Device file manager
       </value>
 
 </block>
-<block type="file_open_read"> 
+<block type="file_open_read">
 
   <value name="filename">
         <shadow type="text">
@@ -1554,7 +1529,7 @@ Device file manager
 
 
 </block>
-<block type="file_write"> 
+<block type="file_write">
 
 
   <value name="data">
@@ -1571,7 +1546,7 @@ Device file manager
       </value>
 
 </block>
-<block type="file_read"> 
+<block type="file_read">
 
   <value name="filename">
         <shadow type="text">
@@ -1580,7 +1555,7 @@ Device file manager
       </value>
 
 </block>
-<block type="file_close"> 
+<block type="file_close">
 
   <value name="filename">
         <shadow type="text">
@@ -1656,9 +1631,9 @@ Device file manager
 </block>
 
   </category>
- 
 
- 
+
+
 
 
   <category name="Network">
@@ -3046,6 +3021,11 @@ Device file manager
 
   </xml>
 
+  <div class="notify"></div>
+  <div class="notify-panel"></div>
+  <div class="language-panel">
+      <select id="languageMenu"></select>
+  </div>
 </body>
 
 <script>
@@ -3071,6 +3051,14 @@ function calculate_size(win) {
   var rows = 25;
     return [cols, rows];
 }
+
+// global BIPES ui variable
+var BIPES = {};
+// Setup UI using global BIPES variable (see ui.js)
+BIPES ['language'] = new language ();
+BIPES ['notify'] = new notify ();
+// BIPES ['workspace'] = new workspace ();
+// BIPES ['workspace'].change ();
 
 (function() {
     window.onload = function() {
@@ -3139,7 +3127,7 @@ function connect(url) {
             data = data.replace(/\n/g, "\r");
             serialWrite(data);
         });
-	
+
 
         term.on('title', function(title) {
             document.title = title;
@@ -3232,7 +3220,7 @@ function connect(url) {
                 }
             }
             term.write(event.data);
-            
+
 	    //byte by byte...
 	    //alert(event.data);
 	    received_string = received_string.concat(event.data);
@@ -3307,8 +3295,8 @@ function get_file2(src_fname) {
 	//serialWrite('\x02'); //Send CTRL+E
 	//serialWrite('\x03');
 	//serialWrite('\x03');
-	//serialWrite('\x04'); 
-	
+	//serialWrite('\x04');
+
 	received_string="";
 	serialWrite("\nimport sys\n");
 	serialWrite("with open('" + get_file_name + "', 'rb') as infile:\n    while True:\n        result = infile.read(32)\n        if result == b'':\n            break\n        len = sys.stdout.write(result)\n");
@@ -3430,7 +3418,7 @@ function promptFilename() {
           reader.readAsText(file,'UTF-8');
 
           reader.onload = readerEvent => {
-              var content = readerEvent.target.result; 
+              var content = readerEvent.target.result;
               console.log("Loading blocks from file...");
               console.log( content );
               var xml = Blockly.Xml.textToDom(content);
@@ -3495,7 +3483,7 @@ function runPythonCode(pCodeIn) {
 function runPython(evt) {
 
 	var devSel = document.getElementById("device_selector").value;
-	
+
 	if (devSel == "UNO") {
 		alert("Generating code for Arduino Uno");
 		var code = Blockly.Arduino.workspaceToCode(Code.workspace);
@@ -3526,7 +3514,7 @@ function runPython(evt) {
         });
         //ws.send('\x04');
 	serialWrite('\x04');
-	
+
 }
 
 function files_run(file) {
@@ -3548,7 +3536,7 @@ function files_run(file) {
 
 	serialWrite('import ' + fileS + '\r');
 
-}						  
+}
 
 
 
@@ -3566,7 +3554,7 @@ function files_delete(file) {
 		update_file_status('Delete aborted for ' + file);
 	}
 
-}						  
+}
 
 
 function blocksToPython() {
@@ -3636,7 +3624,7 @@ function files_view(file) {
 	get_file2(file);
 	update_file_status('Downloading ' + file);
 	str = "Loaded " + file;
-}		
+}
 
 function files_download(file) {
 	str = "Download " + file;
@@ -3644,7 +3632,7 @@ function files_download(file) {
 	//alert(str);
 	get_file2(file);
 	update_file_status('Downloading ' + file);
-}						  
+}
 
 function updateTable(evt) {
 
@@ -3684,14 +3672,14 @@ function listFiles(evt) {
 		return;
 	}
 							      */
-	//alert('See file list in console tab'); 
+	//alert('See file list in console tab');
 	received_string="";
         serialWrite('import os\r');
 	sleep(25);
         serialWrite('os.listdir()\r');
 
 	setTimeout(updateTable, 250);
-	
+
 }
 
 
@@ -3765,9 +3753,9 @@ async function getReader() {
         port = await navigator.serial.requestPort({});
 
 	/*
-        if (navigator.appVersion.indexOf("Win") != -1) 
+        if (navigator.appVersion.indexOf("Win") != -1)
 		await port.open({ baudRate: 115200 });
-        if (navigator.appVersion.indexOf("Linux") != -1) 
+        if (navigator.appVersion.indexOf("Linux") != -1)
 		await port.open({ baudRate: 115200 });
 	*/
 
@@ -3787,15 +3775,15 @@ async function getReader() {
             //var dataIn = new Uint8Array(chunk);
 	    console.log('binary state = ' + binary_state);
 	    //console.log("chunk = " + dataIn);
-	    
-	
+
+
             switch (binary_state) {
 		    case 91:
 		       binary_state = 92;
 		       received_string2="";
 		       gtCnt=0;
 	            break;
-		    
+
 		    case 92:
 			//console.log("len = " + dataIn.length);
 			for (var i = 0; i < dataIn.length; i++) {
@@ -3817,12 +3805,12 @@ async function getReader() {
 	    }
 	    received_string2 = received_string2.concat(chunk);
 
-	
+
 
             if (chunk instanceof ArrayBuffer) {
-                
-                
-			
+
+
+
 				if (binary_state == 12) {
                         // final response for put
                         if (decode_resp(data) == 0) {
@@ -3842,7 +3830,7 @@ async function getReader() {
                             }
                             binary_state = 12;
                         }
-                 
+
 		}
 
 		if (binary_state == 23) {
@@ -3863,7 +3851,7 @@ async function getReader() {
                         // first (and last) response for GET_VER
                         console.log('GET_VER', data);
                         binary_state = 0;
-                  
+
 	}
 
 
@@ -3892,7 +3880,7 @@ async function getReader() {
                         }
 	}
 
- 
+
 		if (binary_state == 21) {
                         // first response for get
                         if (decode_resp(data) == 0) {
@@ -3901,7 +3889,7 @@ async function getReader() {
                             rec[0] = 0;
                             serialWrite(rec);
                         }
-                   
+
 	}
 
             }
@@ -3910,11 +3898,11 @@ async function getReader() {
 	console.log(chunk);
 	received_string = received_string.concat(chunk);
 
-            
+
 	    //byte by byte...
 	    //alert(event.data);
 	    //received_string = received_string.concat(event.data);
-        
+
 	//////////////////////COPIADO DE CIMA DO WEBSOCKET
 	//////////////////////COPIADO DE CIMA DO WEBSOCKET
 	//////////////////////COPIADO DE CIMA DO WEBSOCKET
@@ -3944,9 +3932,3 @@ async function getReader() {
 
 </script>
 </html>
-
-
-
-
-
-

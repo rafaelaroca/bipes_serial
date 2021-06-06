@@ -23,7 +23,7 @@ var libToInstall = '';
 Code.LANGUAGE_NAME = {
   'en': 'English',
   'es': 'Espanol',
-  'pt-br': 'Português Brasilerio'
+  'pt-br': 'Português Brasileiro'
 };
 
 /**
@@ -219,7 +219,7 @@ Code.tabClick = function(clickedName) {
       Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
     }
   }
-  
+
 
   if (document.getElementById('tab_blocks').className == 'tabon') {
     Code.workspace.setVisible(false);
@@ -332,7 +332,7 @@ Code.checkAllGeneratorFunctionsDefined = function(generator) {
 };
 
 /**
- * Rafael -test 
+ * Rafael -test
  *
  */
 
@@ -471,6 +471,8 @@ Code.init = function() {
 
   Code.bindClick('saveButton', saveXml);
   Code.bindClick('loadButton', loadXml);
+  Code.bindClick('notificationButton', () => {BIPES ['notify'].showPanel ()})
+  Code.bindClick('languageButton', () => {BIPES ['language'].showPanel ()})
 
 
   // Disable the link button if page isn't backed by App Engine storage.
@@ -530,10 +532,10 @@ def bipesInstall(url, lib):
     print('Download done')
 
 `;
- 
+
     installCmd = installCmd + "lib = '" + lib + ".py'" + '\r';
     installCmd = installCmd + "bipesInstall('https://bipes.net.br/beta2/ui/pylibs/' + lib, lib)";
-	    
+
 
      runPythonCode(installCmd);
 
@@ -554,7 +556,7 @@ c.close()
 print('Install done.')
 
 `;
- 
+
      runPythonCode(copyCmd);
 
 	    /*
@@ -580,9 +582,9 @@ print('Install done.')
 
 	if (confirm(msgCon)) {
 		//console.log('Thing was saved to the database.');
-		
+
 		//Ask for confirmation
-      		//Code.discard(); 
+      		//Code.discard();
 		//Delete blocks without asking for confirmation
 		Code.workspace.clear();
 
@@ -602,7 +604,7 @@ print('Install done.')
 	var lib = tmp.replace(/\s/g,'');
 
 
-	
+
 	var url = "https://docs.google.com/document/d/e/2PACX-1vSk-9T56hP9K9EOhkF5SoNzsYl4TzDk-GEDnMssaFP_m-LEfI6IU-uRkkLP_HoONK0QmMrZVo_f27Fw/pub";
 
 
@@ -689,6 +691,10 @@ Code.initLanguage = function() {
   document.getElementById('trashButton').title = MSG['trashTooltip'];
   document.getElementById('saveButton').title = MSG['saveTooltip'];
   document.getElementById('loadButton').title = MSG['loadTooltip'];
+  document.getElementById('notificationButton').title = MSG['notificationTooltip'];
+  document.getElementById('languageButton').title = MSG['languageTooltip'];
+  document.getElementById('serialButton').title = MSG['serialTooltip'];
+  document.getElementById('networkButton').title = MSG['networkTooltip'];
 };
 
 /**
