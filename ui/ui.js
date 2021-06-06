@@ -91,6 +91,47 @@ function workspace () {
 
     // setup, could be used and external JSON file instead.
     this.devices = [
+			{name:'ESP8266',
+      title:'<b>ESP8266</b><br>',
+      img:'../../beta2/ui/devinfo/Node-MCU-ESP-12E-Pin-Out-Diagram2.jpg',
+      description:"To use ESP8266, simply connecto to MicroPython board using Wifi. Micropython must be previously installed.",
+      toolbox:'toolbox_esp8266.xml'},
+
+			{name:'ESP32',
+			title:'<b>ESP32</b><br>',
+			img:'../../beta2/ui/devinfo/ESP32-Pinout.jpg',
+			description:"",
+			toolbox:'toolbox_esp32.xml'},
+
+			{name:'Nucleo',
+			title:'<b>mBed: NUCLEO-F446RE</b><br>',
+			img:'../../beta2/ui/devinfo/NUCLEO-F446RE-3-500x500.png',
+			description:"",
+			toolbox:'toolbox_stm32.xml'},
+
+			{name:'BBBlack',
+			title:'<b>Beagle Bone Black</b><br>',
+			img:'../../beta2/ui/devinfo/cape-headers.png',
+			description:"",
+			toolbox:'toolbox_bbblack.xml'},
+
+			{name:'RPI',
+			title:'',
+			img:'',
+			description:"",
+			toolbox:''},
+
+			{name:'RPI_Pico',
+			title:'<b>Raspberry Pi Pico</b><br>Image: https://microcontrollerslab.com/raspberry-pi-pico-pinout-features-programming-peripherals/<br>',
+			img:'https://microcontrollerslab.com/wp-content/uploads/2021/01/Raspberry-Pi-Pico-pinout-diagram.svg',
+			description:"More info: https://microcontrollerslab.com/raspberry-pi-pico-pinout-features-programming-peripherals/ <br><br>https://www.raspberrypi.org/products/raspberry-pi-pico/",
+			toolbox:'toolbox_rpi_pico.xml'},
+
+			{name:'UNO',
+			title:'<b>Arduino UNO. Image source: https://content.arduino.cc/assets/Pinout-UNOrev3_latest.png</b><br>',
+			img:'https://content.arduino.cc/assets/Pinout-UNOrev3_latest.png',
+			description:"",
+			toolbox:'toolbox_arduino.xml'}
 
       /* Template
       {name:'',
@@ -108,7 +149,7 @@ function workspace () {
 workspace.prototype.change = function () {
   let selected = this.devices.find ( ({name}) => name === this.selector.value)
   if (selected != undefined) {
-    this.device_title.innerHTML = selected.name,
+    this.device_title.innerHTML = selected.title,
     this.device_img.src = selected.img,
     this.device_desc.innerHTML = selected.description;
 
@@ -122,5 +163,5 @@ workspace.prototype.change = function () {
     } else
         BIPES ['notify'].send(MSG['noToolbox']);
   } else
-    BIPES ['notify'].send(MSG['invalidBoard']);
+    BIPES ['notify'].send(MSG['invalidDevice']);
 }

@@ -118,23 +118,6 @@ document.body.appendChild(el);
 
 	<script>
 
-	function loadFileToElement(filename, elementId)
-	{
-	    var xmlHTTP = new XMLHttpRequest();
-	    try
-	    {
-	    xmlHTTP.open("GET", filename, false);
-	    xmlHTTP.send(null);
-	    }
-	    catch (e) {
-		window.alert("Unable to load the requested file.");
-		return;
-	    }
-
-	    document.getElementById(elementId).innerHTML=xmlHTTP.responseText;
-	}
-
-
   var pinout = {
     'ESP8266': [
       ['D0', "16"],
@@ -194,70 +177,7 @@ document.body.appendChild(el);
 
 
 
-		function changeDevice(dev) {
-			//alert(dev);
-			if (dev == 'ESP8266') {
-				document.getElementById('device_title').innerHTML = '<b>ESP8266</b><br>';
-				document.getElementById("device_img").src = "http://bipes.net.br/beta2/ui/devinfo/Node-MCU-ESP-12E-Pin-Out-Diagram2.jpg";
-				document.getElementById("device_desc").innerHTML = "To use ESP8266, simply connecto to MicroPython board using Wifi. Micropython must be previously installed.";
 
-				//document.getElementById("toolbox")=document.getElementById("toolbox1");
-				//Code.reloadToolbox();
-				loadFileToElement('toolbox_esp8266.xml','toolbox');
-				Code.workspace.updateToolbox(document.getElementById('toolbox'));
-			}
-			if (dev == 'ESP32') {
-				document.getElementById('device_title').innerHTML = '<b>ESP32</b><br>';
-				document.getElementById("device_img").src = "http://bipes.net.br/beta2/ui/devinfo/ESP32-Pinout.jpg";
-				//document.getElementById("toolbox")=document.getElementById("toolbox2");
-				//Code.reloadToolbox();
-				loadFileToElement('toolbox_esp32.xml','toolbox');
-				Code.workspace.updateToolbox(document.getElementById('toolbox'));
-
-			}
-			if (dev == 'Nucleo') {
-				document.getElementById('device_title').innerHTML = '<b>mBed: NUCLEO-F446RE</b><br>';
-				document.getElementById("device_img").src = "http://bipes.net.br/beta2/ui/devinfo/NUCLEO-F446RE-3-500x500.png";
-
-				loadFileToElement('toolbox_stm32.xml','toolbox');
-				Code.workspace.updateToolbox(document.getElementById('toolbox'));
-
-
-
-
-			}
-			if (dev == 'BBBlack') {
-				document.getElementById('device_title').innerHTML = '<b>Beagle Bone Black</b><br>';
-				document.getElementById("device_img").src = "http://bipes.net.br/beta2/ui/devinfo/cape-headers.png";
-				loadFileToElement('toolbox_bbblack.xml','toolbox');
-				Code.workspace.updateToolbox(document.getElementById('toolbox'));
-
-
-			}
-			if (dev == 'RPI') {
-			}
-
-			if (dev == 'RPI_Pico') {
-				document.getElementById('device_title').innerHTML = '<b>Raspberry Pi Pico</b><br>Image: https://microcontrollerslab.com/raspberry-pi-pico-pinout-features-programming-peripherals/<br>';
-				document.getElementById("device_desc").innerHTML = "More info: https://microcontrollerslab.com/raspberry-pi-pico-pinout-features-programming-peripherals/ <br><br>https://www.raspberrypi.org/products/raspberry-pi-pico/";
-				document.getElementById("device_img").src = "https://microcontrollerslab.com/wp-content/uploads/2021/01/Raspberry-Pi-Pico-pinout-diagram.svg";
-				loadFileToElement('toolbox_rpi_pico.xml','toolbox');
-				Code.workspace.updateToolbox(document.getElementById('toolbox'));
-
-
-			}
-
-
-
-			if (dev == 'UNO') {
-				document.getElementById('device_title').innerHTML = '<b>Arduino UNO. Image source: https://content.arduino.cc/assets/Pinout-UNOrev3_latest.png</b><br>';
-				document.getElementById("device_img").src = "https://content.arduino.cc/assets/Pinout-UNOrev3_latest.png";
-				loadFileToElement('toolbox_arduino.xml','toolbox');
-				Code.workspace.updateToolbox(document.getElementById('toolbox'));
-
-
-			}
-		}
 	</script>
   <div class="toolbar">
     <div id="serial_network">
@@ -3057,8 +2977,8 @@ var BIPES = {};
 // Setup UI using global BIPES variable (see ui.js)
 BIPES ['language'] = new language ();
 BIPES ['notify'] = new notify ();
-// BIPES ['workspace'] = new workspace ();
-// BIPES ['workspace'].change ();
+BIPES ['workspace'] = new workspace ();
+BIPES ['workspace'].change ();
 
 (function() {
     window.onload = function() {
