@@ -2978,7 +2978,6 @@ var BIPES = {};
 BIPES ['language'] = new language ();
 BIPES ['notify'] = new notify ();
 BIPES ['workspace'] = new workspace ();
-BIPES ['workspace'].change ();
 
 (function() {
     window.onload = function() {
@@ -2993,6 +2992,8 @@ BIPES ['workspace'].change ();
       });
       term.open(document.getElementById("term"));
       show_https_warning();
+
+      BIPES ['workspace'].change ();
     };
     window.addEventListener('resize', function() {
         dom  = document.getElementById("termTR")
