@@ -453,7 +453,7 @@ Blockly.Blocks['pinout'] = {
     if (device_ in pinout){
       return pinout[device_];
     }else{
-      return [["Pins are not defined","None"]];
+      return [[MSG["notDefined"],"None"]];
     }
 
   },
