@@ -1,4 +1,5 @@
-    <category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
+<document>
+  <category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>
       <block type="logic_operation"></block>
@@ -370,9 +371,6 @@
 
 
     </block>
-  </category>
-
-
   </category>
 
   <category name="Machine">
@@ -889,6 +887,29 @@
 
   </category>
 
+
+  <category name="Rotatory Encoder">
+      <label text="Rotatory Incremental Encoder"></label>
+        <button text="Load example: encoder" callbackKey="loadExample"></button>
+        <button text="Documentation and how to connect: encoder" callbackKey="loadDoc"></button>
+
+      <block type="encoder_init">
+        <value name="p0">
+          <shadow type="pinout">
+            <field name="ch0"></field>
+          </shadow>
+        </value>
+ 
+        <value name="p1">
+          <shadow type="pinout">
+            <field name="ch1"></field>
+          </shadow>
+        </value>
+
+      </block>
+      <block type="encoder_reset"></block>
+      <block type="encoder_read"></block>
+  </category>
   </category>
 
 
@@ -906,7 +927,7 @@
       </block>
     </category>
 
-  <category name="RC Servo">
+  <category name="RC Servo Motor">
       <label text="Hobby RC Servo Motor"></label>
     <block type="init_servo">
         <value name="pin">
@@ -925,6 +946,81 @@
     </block>
   </category>
 
+
+  <category name="Stepper Motor">
+      <label text="Stepper Motor"></label>
+    <block type="stepper_init">
+      <value name="p0">
+        <shadow type="pinout">
+          <field name="Pin0"></field>
+        </shadow>
+      </value>
+      <value name="p1">
+        <shadow type="pinout">
+          <field name="Pin1"></field>
+        </shadow>
+      </value>
+      <value name="p2">
+        <shadow type="pinout">
+          <field name="Pin2"></field>
+        </shadow>
+      </value>
+      <value name="p3">
+        <shadow type="pinout">
+          <field name="Pin3"></field>
+        </shadow>
+      </value>
+    </block>
+
+    <block type="stepper_step">
+     <value name="steps">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+    </block>
+  </category>
+
+  <category name="DC Motor">
+      <label text="DC Motor"></label>
+    <block type="dc_motor_init">
+      <value name="pwm">
+        <shadow type="pinout">
+          <field name="PWM"></field>
+        </shadow>
+      </value>
+      <value name="dir1">
+        <shadow type="pinout">
+          <field name="Dir1"></field>
+        </shadow>
+      </value>
+      <value name="dir2">
+        <shadow type="pinout">
+          <field name="Dir2"></field>
+        </shadow>
+      </value>
+
+    </block>
+
+    <block type="dc_motor_power">
+     <value name="power">
+        <shadow type="math_number">
+          <field name="NUM">70</field>
+        </shadow>
+      </value>
+    </block>
+
+    <block type="dc_motor_direction">
+     <value name="dir">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+    </block>
+_
+    <block type="dc_motor_stop">
+    </block>
+  </category>
 
   </category>
 
@@ -1449,7 +1545,26 @@
       <block type="webrepl_setup"></block>
       <block type="webrepl_start"></block>
     </category>
-  </category>
+
+
+    <category name="CAN Bus">
+     <label text="Controller Area Network (CAN)"></label>
+     <label text="Requires specific firmware"></label>
+     <label text="Compatible with: https://github.com/micropython/micropython/issues/5087#issuecomment-538779410"></label>
+        <button text="Load example: esp32_can" callbackKey="loadExample"></button>
+        <button text="Documentation: esp32_can" callbackKey="loadDoc"></button>
+
+    <block type="esp32_can_init">
+    </block>
+
+    <block type="esp32_can_filter">
+    </block>
+    <block type="esp32_can_send">
+    </block>
+    <block type="esp32_can_recv">
+    </block>
+
+    </category>
 
 
   </category>
@@ -2523,4 +2638,4 @@
 </block>
 </category>
 </category>
-
+</document>
