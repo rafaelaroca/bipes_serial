@@ -376,8 +376,6 @@
   </category>
 
 
-  </category>
-
   <category name="Machine">
       <label text="Machine"></label>
       <category name="CPU">
@@ -1452,9 +1450,6 @@
       <block type="webrepl_setup"></block>
       <block type="webrepl_start"></block>
     </category>
-  </category>
-
-
   </category>
 
 
