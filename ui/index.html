@@ -108,72 +108,15 @@ document.body.appendChild(el);
             <div class="tabs">
                 <div id="tab_blocks" class="tabon">...</div>
                 <div id="tab_console" class="taboff">Console</div>
-                <div id="tab_python" class="taboff">Python</div>
+                <div id="tab_code" class="taboff">Code</div>
                 <div id="tab_files" class="taboff">Files</div>
                 <div id="tab_programs" class="taboff">Shared</div>
                 <div id="tab_device" class="taboff">Device</div>
                 <div id="tab_iot" class="taboff">IOT</div>
                 <div id="tab_mqtt" class="taboff" onclick='document.getElementById("easymqtt_iframe").contentWindow.startEasyMQTT(window.easyMQTT_session);'>EasyMQTT</div>
-                <div id="tab_xml" class="taboff">XML</div>
             </div>
 
 	<script>
-
-  var pinout = {
-    'ESP8266': [
-      ['D0', "16"],
-      ['D1', "5"],
-      ['D2', "4"],
-      ['D3', "0"],
-      ['D4/LED', "2"],
-      ['D5', "14"],
-      ['D6', "12"],
-      ['D7', "13"],
-      ['D8', "15"],
-      ['RX', "3"],
-      ['TX', "1"],
-      ['SD3', "10"],
-      ['SD2', "9"],
-      ['SD1', "8"],
-      ['CMD', "11"],
-      ['SD0', "7"],
-      ['CLK', "6"]
-    ]
-  };
-
-
-  var pinout = {
-    'RPI_Pico': [
-      ['LED / GP25', "25"],
-      ['Pin 1 / GP0', "0"],
-      ['Pin 2 / GP1', "1"],
-      ['Pin 4 / GP2', "4"],
-      ['Pin 5 / GP3', "3"],
-      ['Pin 6 / GP4', "4"],
-      ['Pin 7 / GP5', "5"],
-      ['Pin 9 / GP6', "6"],
-      ['Pin 10 / GP7', "7"],
-      ['Pin 11 / GP8', "8"],
-      ['Pin 12 / GP9', "9"],
-      ['Pin 14 / GP10', "10"],
-      ['Pin 15 / GP11', "11"],
-      ['Pin 16 / GP12', "12"],
-      ['Pin 17 / GP13', "13"],
-      ['Pin 19 / GP14', "14"],
-      ['Pin 20 / GP15', "15"],
-      ['Pin 21 / GP16', "16"],
-      ['Pin 22 / GP17', "17"],
-      ['Pin 24 / GP18', "18"],
-      ['Pin 25 / GP19', "19"],
-      ['Pin 26 / GP20', "20"],
-      ['Pin 27 / GP21', "21"],
-      ['Pin 29 / GP22', "22"],
-      ['Pin 26 / ADC0 / GP26', "26"],
-      ['Pin 27 / ADC1 / GP27', "27"],
-      ['Pin 28 / ADC2 / GP28', "28"],
-      ['Internal Temp Sensor / ADC3', "4"]
-    ]
-  };
 
 
 
@@ -188,7 +131,9 @@ document.body.appendChild(el);
     <div class="icon" id="deviceSelect">
 			<select id="device_selector" onchange="changeDevice(this.value)">
 			  <option value="ESP8266">ESP8266</option>
+        <option value="ESP32S2">Franzininho Wifi (ESP32-S2)</option>
 			  <option value="ESP32">ESP32</option>
+        <option value="ESP32-LoRa">ESP32 LoRa</option>
 			  <option value="Nucleo">ST Nucleo (mBed)</option>
 			  <option value="BBBlack">Beagle Bone Black</option>
 			  <option value="PocketBeagle">Pocket Beagle</option>
@@ -219,6 +164,8 @@ document.body.appendChild(el);
       <button id="languageButton" class="notext icon" title="..."></button>
 
       <button id="notificationButton" class="notext icon" title="..."></button>
+
+      <button id="forumButton" class="notext icon" title="..."></button>
     </div>
     </td>
     </tr>
@@ -283,12 +230,21 @@ document.body.appendChild(el);
 
 
 <!-- ################################################## -->
-
-  <pre id="content_python" class="content"></pre>
-
-<!-- ################################################## -->
-
-  <textarea id="content_xml" class="content" wrap="off" readonly></textarea>
+  <div id="content_code" class="content">
+    <details open>
+      <summary>
+        <span>Python</span>
+        <button id="editAsFileButton" title="..."></button>
+      </summary>
+      <pre id="content_python"></pre>
+    </details>
+    <details>
+      <summary>
+        <span>XML</span>
+      </summary>
+      <pre id="content_xml"></pre>
+    </details>
+  </div>
 
 <!-- ################################################## -->
 
@@ -306,7 +262,7 @@ document.body.appendChild(el);
 	  <center>
 		  <label id="device_title"><b>ESP8266</b><br></label>
 	  <br>
-	  <img id="device_img" src=devinfo/Node-MCU-ESP-12E-Pin-Out-Diagram2.jpg width="40%">
+	  <img id="device_img" src="devinfo/Node-MCU-ESP-12E-Pin-Out-Diagram2.jpg">
 	  <br>
 
 	  <label id="device_desc">Description about chosen device</label>
@@ -2979,9 +2935,9 @@ var BIPES = {};
 // Setup UI using global BIPES variable (see ui.js)
 BIPES ['responsive'] = new responsive ();
 BIPES ['notify'] = new notify ();
-BIPES ['.language-panel'] = new language ('#languageButton','.language-panel');
-BIPES ['.notify-panel'] = new panel ('#notificationButton','.notify-panel');
-BIPES ['.toolbar'] = new panel ('#toolbarButton','.toolbar');
+BIPES ['language'] = new language ('#languageButton','.language-panel');
+BIPES ['notify-panel'] = new panel ('#notificationButton','.notify-panel');
+BIPES ['toolbar'] = new panel ('#toolbarButton','.toolbar');
 BIPES ['workspace'] = new workspace ();
 
 (function() {
@@ -2997,8 +2953,6 @@ BIPES ['workspace'] = new workspace ();
       });
       term.open(document.getElementById("term"));
       show_https_warning();
-
-      BIPES ['workspace'].change ();
     };
     window.addEventListener('resize', function() {
         dom  = document.getElementById("termTR")
