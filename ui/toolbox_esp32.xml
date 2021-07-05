@@ -288,6 +288,18 @@
 
      </category>
 
+     <category name="BIPES">
+    <block type="bipes_plot">
+      <field name="NAME">Plot</field>
+      <value name="values">
+        <shadow type="text">
+          <field name="TEXT"></field>
+        </shadow>
+      </value>
+    </block>
+
+
+     </category>
 
     <sep></sep>
     <!--
@@ -460,7 +472,79 @@
   </category>
 
 
-  <category name="Displays">
+<category name="Displays">
+
+<category name="NeoPixel LED Strip">
+      <label text="NeoPixel RGB LED Strip"></label>
+
+        <button text="Documentation and how to connect: neopixel" callbackKey="loadDoc"></button>
+
+      <block type="neopixel_init">
+       <value name="pin">
+          <shadow type="pinout">
+            <field name="Pin"></field>
+          </shadow>
+       </value>
+
+       <value name="number">
+        <shadow type="math_number">
+          <field name="NUM">8</field>
+        </shadow>
+       </value>
+      </block>
+
+      <block type="neopixel_color_numbers">
+       <value name="red">
+        <shadow type="math_number">
+          <field name="NUM">255</field>
+        </shadow>
+       </value>
+       <value name="green">
+        <shadow type="math_number">
+          <field name="NUM">255</field>
+        </shadow>
+       </value>
+       <value name="blue">
+        <shadow type="math_number">
+          <field name="NUM">255</field>
+        </shadow>
+       </value>
+      </block>
+
+      <block type="neopixel_color_colors"></block>
+
+      <block type="neopixel_write">
+       <value name="address">
+        <shadow type="math_number">
+          <field name="NUM">0</field>
+        </shadow>
+       </value>
+
+       <value name="color">
+        <shadow type="neopixel_color_colors">
+          <field name="PIN"></field>
+        </shadow>
+       </value>
+      </block>
+
+      <block type="neopixel_write">
+       <value name="address">
+        <shadow type="math_number">
+          <field name="NUM">0</field>
+        </shadow>
+       </value>
+
+       <value name="color">
+        <shadow type="neopixel_color_numbers">
+          <field name="PIN"></field>
+        </shadow>
+       </value>
+      </block>
+      
+
+</category>
+
+
 
   <category name="Character display">
       <label text="PCF8574 Display controller"></label>
