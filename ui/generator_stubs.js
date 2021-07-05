@@ -4006,7 +4006,7 @@ Blockly.Python['esp32_get_rtc'] = function(block) {
   Blockly.Python.definitions_['import_rtc'] = 'from machine import RTC';
   Blockly.Python.definitions_['import_rtc_def'] = 'rtc = RTC()';
 
-  var code = 'rtc.now()';
+  var code = 'rtc.datetime()';
   return [code, Blockly.Python.ORDER_NONE];
 };
 
@@ -4035,7 +4035,7 @@ Blockly.Python['esp32_set_rtc'] = function(block) {
   var min = Blockly.Python.valueToCode(block, 'minute', Blockly.Python.ORDER_ATOMIC);
   var s = Blockly.Python.valueToCode(block, 'second', Blockly.Python.ORDER_ATOMIC);
 
-  var code = 'rtc.init((' + y + ',' + m + ',' + d + ',0,' + h + ',' + min + ',' + s + ',0))\n';
+  var code = 'rtc.datetime((' + y + ',' + m + ',' + d + ',0,' + h + ',' + min + ',' + s + ',0))\n';
   return code;
 };
 
@@ -5006,6 +5006,64 @@ Blockly.Python['python_try_catch'] = function(block) {
   var c = Blockly.Python.statementToCode(block, 'catch');
 
   var code = "try:\n"+funct_code+"except:\n"+c+"\n";
+  return code;
+};
+
+
+
+Blockly.Python['neopixel_color_numbers'] = function(block) {
+  var value_red = Blockly.JavaScript.valueToCode(block, 'red', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_green = Blockly.JavaScript.valueToCode(block, 'green', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_blue = Blockly.JavaScript.valueToCode(block, 'blue', Blockly.JavaScript.ORDER_ATOMIC);
+
+  var code = '(' + value_red + ',' + value_green + ',' + value_blue + ')';
+
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+
+function hexToRgb(hex) {
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+    return r + r + g + g + b + b;
+  });
+
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+Blockly.Python['neopixel_color_colors'] = function(block) {
+  var color = block.getFieldValue('color');
+  var h = hexToRgb(color);
+  var code = '(' + h.r + ',' + h.g + ',' + h.b + ')';
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+
+
+Blockly.Python['neopixel_init'] = function(block) {
+  Blockly.Python.definitions_['import_machine'] = 'import machine';
+  Blockly.Python.definitions_['import_neopixel'] = 'import neopixel';
+
+  var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+  var value_number = Blockly.Python.valueToCode(block, 'number', Blockly.Python.ORDER_ATOMIC);
+
+  var code = 'np=neopixel.NeoPixel(machine.Pin(' + value_pin + '),' + value_number + ')\n';
+
+  return code;
+};
+
+Blockly.Python['neopixel_write'] = function(block) {
+  var value_address = Blockly.Python.valueToCode(block, 'address', Blockly.Python.ORDER_ATOMIC);
+  var value_color = Blockly.Python.valueToCode(block, 'color', Blockly.Python.ORDER_ATOMIC);
+
+  var code = 'np[' + value_address + ']=' + value_color + '\n' + 'np.write()\n';
+
   return code;
 };
 

@@ -9827,3 +9827,92 @@ Blockly.Blocks['python_try_catch'] = {
     this.setHelpUrl("http://www.bipes.net.br");
   }
 };
+
+
+
+//neopixel
+Blockly.Blocks['neopixel_init'] = {
+  init: function() {
+    this.setColour(135);
+    this.appendDummyInput()
+        .appendField("Init neopixel");
+
+ this.appendDummyInput()
+      .appendField(new Blockly.FieldImage(
+        "media/neopixel.png",
+        55,
+        55,
+        "*"));
+
+    this.appendValueInput("pin")
+        .setCheck(null)
+	.appendField("Pin");
+
+    this.appendValueInput("number")
+        .setCheck("Number")
+	  .appendField("Number of LEDs");
+
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Init NeoPixel on the specified pin");
+  }
+};
+
+
+Blockly.Blocks['neopixel_write'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldLabelSerializable("NeoPixel Control"), "MSG_NEOPIXEL");
+
+    this.appendValueInput("address")
+        .setCheck(null)
+	.appendField("LED");
+
+    this.appendValueInput("color")
+        .setCheck("Number")
+	  .appendField("Color");
+
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+
+    this.setColour(230);
+ this.setTooltip("Acceleration on X axis");
+ this.setHelpUrl("http://www.bipes.net.br");
+  }
+};
+
+
+Blockly.Blocks['neopixel_color_numbers'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Red");
+    this.appendValueInput("red")
+        .setCheck(null);
+    this.appendDummyInput()
+        .appendField("Green");
+    this.appendValueInput("green")
+        .setCheck(null);
+    this.appendDummyInput()
+        .appendField("Blue");
+    this.appendValueInput("blue")
+        .setCheck(null);
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("NeoPixel LED URL");
+ this.setHelpUrl("https://bipes.net.br/wp/?page_id=177");
+  }
+};
+
+Blockly.Blocks['neopixel_color_colors'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Color")
+        .appendField(new Blockly.FieldColour("#ff0000"), "color");
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("NeoPixel LED Color");
+ this.setHelpUrl("https://bipes.net.br/wp/?page_id=177");
+  }
+};
