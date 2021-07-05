@@ -288,6 +288,18 @@
 
      </category>
 
+     <category name="BIPES">
+    <block type="bipes_plot">
+      <field name="NAME">Plot</field>
+      <value name="values">
+        <shadow type="text">
+          <field name="TEXT"></field>
+        </shadow>
+      </value>
+    </block>
+
+
+     </category>
 
     <sep></sep>
     <!--

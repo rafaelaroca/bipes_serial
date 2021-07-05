@@ -9916,3 +9916,24 @@ Blockly.Blocks['neopixel_color_colors'] = {
  this.setHelpUrl("https://bipes.net.br/wp/?page_id=177");
   }
 };
+
+Blockly.Blocks['bipes_plot'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Plot (from serial port) on IOT tab graph");
+
+    this.appendValueInput("values")
+        .setCheck("String")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("data");
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+
+ this.setTooltip("BIPES Plot");
+ this.setHelpUrl("http://www.bipes.net.br");
+  }
+};
+
+
