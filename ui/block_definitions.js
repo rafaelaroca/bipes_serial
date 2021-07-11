@@ -456,6 +456,20 @@ Blockly.Blocks['adc'] = {
   }
 };
 
+Blockly.Blocks['esp32_adc'] = {
+  init: function() {
+    this.appendValueInput("pin")
+        .setCheck("Number")
+        .appendField("ESP32 Analog (ADC) Input");
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("Read ESP32 ADC input of specified pin");
+ this.setHelpUrl("http://www.bipes.net.br");
+  }
+};
+
+
+
 
 Blockly.Blocks['adc_pico'] = {
   init: function() {

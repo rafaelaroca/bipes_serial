@@ -432,39 +432,30 @@
     </block>
     <block type="pinout"></block>
 
-    <block type="adc">
- <value name="pin">
-        <shadow type="math_number">
-          <field name="NUM">0</field>
-        </shadow>
-      </value>
-    </block>
-
-
-    <block type="esp32_pwm">
-
-  <value name="pin">
+    <block type="esp32_adc">
+      <value name="pin">
         <shadow type="pinout">
           <field name="PIN"></field>
         </shadow>
       </value>
+    </block>
 
-
- <value name="frequency">
+    <block type="esp32_pwm">
+     <value name="pin">
+        <shadow type="pinout">
+          <field name="PIN"></field>
+        </shadow>
+      </value>
+     <value name="frequency">
         <shadow type="math_number">
           <field name="NUM">1000</field>
         </shadow>
       </value>
-
- <value name="duty">
+     <value name="duty">
         <shadow type="math_number">
           <field name="NUM">50</field>
         </shadow>
       </value>
-
-    
-    
-    
     </block>
   </category>
 
