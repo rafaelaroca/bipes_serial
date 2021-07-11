@@ -388,7 +388,7 @@
   <category name="Machine">
       <label text="Machine"></label>
       <category name="CPU">
-      <label text="ESP8266 CPU"></label>
+      <label text="ESP32 CPU"></label>
 
     <block type="get_freq"></block>
     <block type="set_freq">
@@ -441,7 +441,7 @@
     </block>
 
 
-    <block type="pwm">
+    <block type="esp32_pwm">
 
   <value name="pin">
         <shadow type="pinout">

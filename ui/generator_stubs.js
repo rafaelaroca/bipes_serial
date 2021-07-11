@@ -4139,7 +4139,9 @@ Blockly.Python['deep_sleep'] = function(block) {
 	return code;
   };
 	  
-  Blockly.Python['pwm'] = function(block) {
+
+
+Blockly.Python['pwm'] = function(block) {
 	var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
 	var value_frequency = Blockly.Python.valueToCode(block, 'frequency', Blockly.Python.ORDER_ATOMIC);
 	var value_duty = Blockly.Python.valueToCode(block, 'duty', Blockly.Python.ORDER_ATOMIC);
@@ -4150,11 +4152,31 @@ Blockly.Python['deep_sleep'] = function(block) {
 
 	Blockly.Python.definitions_['init_pwm' + x] = 'pwm' + x + " = machine.PWM(machine.Pin(" + x + "))";
 
-	var code = 'pwm' + x + '.freq(' + value_frequency + ')\npwm' + x + '.duty_u16(' + value_duty + ')\n';
+	var code = 'pwm' + x + '.freq(' + value_frequency + ')\npwm' + x + '.duty(' + value_duty + ')\n';
 
 	//var code = 'PWM(Pin(' + value_pin +'), freq=' + value_frequency + ', duty = ' + value_duty + ')\n';
 	return code;
   };
+
+
+Blockly.Python['esp32_pwm'] = function(block) {
+	var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+	var value_frequency = Blockly.Python.valueToCode(block, 'frequency', Blockly.Python.ORDER_ATOMIC);
+	var value_duty = Blockly.Python.valueToCode(block, 'duty', Blockly.Python.ORDER_ATOMIC);
+	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
+	Blockly.Python.definitions_['import_pwm'] = 'from machine import PWM';
+  	
+	var x = value_pin.replace('(','').replace(')','');
+
+	Blockly.Python.definitions_['init_pwm' + x] = 'pwm' + x + " = PWM(Pin(" + x + "))";
+
+	var code = 'pwm' + x + '.freq(' + value_frequency + ')\npwm' + x + '.duty(' + value_duty + ')\n';
+
+	//var code = 'PWM(Pin(' + value_pin +'), freq=' + value_frequency + ', duty = ' + value_duty + ')\n';
+	return code;
+  };
+
+
 
 //Sckit-Learn Test
 //Author: Andouglas Junior
