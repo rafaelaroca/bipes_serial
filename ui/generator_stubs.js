@@ -126,8 +126,7 @@ Blockly.Python['play_mp3'] = function(block) {
 };
 
 Blockly.Python['esp32_adc'] = function(block) {
-  Blockly.Python.definitions_['import_machine'] = 'import machine';
-  Blockly.Python.definitions_['import_machine_adc'] = 'from  machine import ADC';
+  Blockly.Python.definitions_['import_machine_adc'] = 'from  machine import Pin,ADC';
   var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
   var x = value_pin.replace('(','').replace(')','');
 
@@ -155,7 +154,7 @@ Blockly.Python['esp32_adc'] = function(block) {
 	w = 'ADC.WIDTH_12BIT';
 
 
-  Blockly.Python.definitions_['init_adc' + x] = 'adc' + x + '=machine.ADC(Pin(' + x + '))\nadc' + x + '.atten(' + atten + ')\nadc' + x + '.width(' + w + ')\n';
+  Blockly.Python.definitions_['init_adc' + x] = 'adc' + x + '=ADC(Pin(' + x + '))\nadc' + x + '.atten(' + atten + ')\nadc' + x + '.width(' + w + ')\n';
 
   var code = 'adc' + x + '.read_u16()';
   return [code, Blockly.Python.ORDER_NONE];
@@ -4292,7 +4291,7 @@ Blockly.Python['hcsr_init'] = function(block) {
 
   Blockly.Python.definitions_['import_hcr'] = 'from hcsr04 import HCSR04';
 
-  var code = 'ultraSoundSensor = HCSR04(trigger_pin=' + pTrig + ', echo_pin=' + pEcho + ', echo_timeout_us=' + pTime + ')';
+  var code = 'ultraSoundSensor = HCSR04(trigger_pin=' + pTrig + ', echo_pin=' + pEcho + ', echo_timeout_us=' + pTime + ')\n';
 
   return code;
 };

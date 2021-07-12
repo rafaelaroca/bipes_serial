@@ -583,24 +583,22 @@
       <label text="SSD1306 OLED I2C Display"></label>
       <button text="Install SSD1306 library" callbackKey="installPyLib"></button>
 
-
-
-    <block type="init_oled">
-
- <value name="scl">
-        <shadow type="math_number">
-          <field name="NUM">5</field>
-        </shadow>
-      </value>
-
- <value name="sda">
-        <shadow type="math_number">
-          <field name="NUM">4</field>
-        </shadow>
-      </value>
-
-
-    
+      <block type="init_oled">
+        <value name="i2c">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="scl">
+          <shadow type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+        <value name="sda">
+          <shadow type="math_number">
+            <field name="NUM">4</field>
+          </shadow>
+        </value>
     </block>
     <block type="write_oled">
 
