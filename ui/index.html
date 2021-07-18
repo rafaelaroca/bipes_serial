@@ -1,1036 +1,1014 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="google" value="notranslate">
-  <meta name="viewport" content="width=device-width, user-scalable=no">
-  <title>BIPES Project - Beta2</title>
-
-
-	<link rel="manifest" href="manifest.json"></link>
-	<script src="manup.js"></script>
-
-
-
+  <head>
+    <meta charset="utf-8">
+    <meta name="google" value="notranslate">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>BIPES Project - Beta2
+    </title>
+    <link rel="manifest" href="manifest.json">
+    </link>
+  <script src="manup.js">
+  </script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-162001686-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-162001686-1');
-</script>
-
-
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162001686-1">
+  </script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-162001686-1');
+  </script>
   <style>
-  html {
-    background: #555;
-  }
-
-  h1 {
-    margin-bottom: 20px;
-    font: 20px/1.5 sans-serif;
-  }
-
-/*
-  .terminal {
+    html {
+      background: #555;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font: 20px/1.5 sans-serif;
+    }
+    /*
+    .terminal {
     float: left;
     border: #000 solid 5px;
     font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
     font-size: 11px;
     color: #f0f0f0;
     background: #000;
-  }
-
-  .terminal-cursor {
+    }
+    .terminal-cursor {
     color: #000;
     background: #f0f0f0;
-  }
-*/
-
-  .file-box {
-    margin: 4px;
-    padding: 4px;
-    background: #888;
-  }
-</style>
+    }
+    */
+    .file-box {
+      margin: 4px;
+      padding: 4px;
+      background: #888;
+    }
+  </style>
   <link rel="stylesheet" href="style.css">
-  <script src="storage.js"></script>
-  <script src="blockly_compressed.js"></script>
-  <script src="blocks_compressed.js"></script>
-  <script src="javascript_compressed.js"></script>
-  <script src="python_compressed.js"></script>
-  <script src="arduino_compressed.js"></script>
-  <script src="code.js"></script>
-  <script src="ui.js"></script>
-
+  <script src="storage.js">
+  </script>
+  <script src="blockly_compressed.js">
+  </script>
+  <script src="blocks_compressed.js">
+  </script>
+  <script src="javascript_compressed.js">
+  </script>
+  <script src="python_compressed.js">
+  </script>
+  <script src="arduino_compressed.js">
+  </script>
+  <script src="code.js">
+  </script>
+  <script src="ui.js">
+  </script>
   <!-- Custom Blocks for BIPES Project -->
-  <script src="block_definitions.js"></script> <!-- Rafael 24/03/2020 -->
-  <script src="generator_stubs.js"></script> <!-- Rafael 24/03/2020 -->
-
+  <script src="block_definitions.js">
+  </script> 
+  <!-- Rafael 24/03/2020 -->
+  <script src="generator_stubs.js">
+  </script> 
+  <!-- Rafael 24/03/2020 -->
   <!-- WebREPL part -->
-  <script src="term.js"></script>
-  <script src="FileSaver.js"></script>
-
-
-<script type="module">
+  <script src="term.js">
+  </script>
+  <script src="FileSaver.js">
+  </script>
+  <script type="module">
   // This is the "Offline copy of pages" service worker
-
 /*
  This code uses the pwa-update web component https://github.com/pwa-builder/pwa-update to register your service worker, tell the user when there is an update available and let the user know when your PWA is ready to use offline.
-
 */
-
 import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
 const el = document.createElement('pwa-update');
 document.body.appendChild(el);
-
-</script>
-
-<!--
+  </script>
+  <!--
 <script
-  type="module"
-  src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
+type="module"
+src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
 ></script>
 -->
-
-</head>
+  </head>
 <body>
-
-
-
   <table width="100%" height="100%">
     <tr>
       <td colspan=2 class="top-menu">
-
-            <div class="logo">BIPES</div>
-            <div class="tabs">
-                <div id="tab_blocks" class="tabon">...</div>
-                <div id="tab_console" class="taboff">Console</div>
-                <div id="tab_code" class="taboff">Code</div>
-                <div id="tab_files" class="taboff">Files</div>
-                <div id="tab_programs" class="taboff">Shared</div>
-                <div id="tab_device" class="taboff">Device</div>
-                <div id="tab_iot" class="taboff">IOT</div>
-                <div id="tab_mqtt" class="taboff" onclick='document.getElementById("easymqtt_iframe").contentWindow.startEasyMQTT(window.easyMQTT_session);'>EasyMQTT</div>
-            </div>
-
-	<script>
-
-
-
-
-
-	</script>
-  <button id="toolbarButton" class="notext icon medium" title="..."></button>
-  <div class="toolbar">
-    <div id="serial_network">
-      <a class="icon selected" id="serialButton" href="https://bipes.net.br/beta2serial/ui" title="..."></a><a class="icon" id="networkButton" href="http://bipes.net.br/beta2/ui" title="..."></a>
-    </div>
-    <div class="icon" id="deviceSelect">
-			<select id="device_selector" onchange="changeDevice(this.value)">
-			  <option value="ESP8266">ESP8266</option>
-        <option value="ESP32S2">Franzininho Wifi (ESP32-S2)</option>
-			  <option value="ESP32">ESP32</option>
-        <option value="ESP32-LoRa">ESP32 LoRa</option>
-			  <option value="Nucleo">ST Nucleo (mBed)</option>
-			  <option value="BBBlack">Beagle Bone Black</option>
-			  <option value="PocketBeagle">Pocket Beagle</option>
-			  <option value="LinkIt Smart">LinkIt Smart</option>
-			  <option value="RPI1">Raspberry Pi 1</option>
-			  <option value="RPI2">Raspberry Pi 2</option>
-			  <option value="RPI3">Raspberry Pi 3</option>
-			  <option value="RPI4">Raspberry Pi 4</option>
-			  <option value="RPI0">Raspberry Pi Zero</option>
-			  <option value="RPI_Pico">Raspberry Pi Pico</option>
-			  <option value="UNO">Arduino UNO</option>
-			  <option value="MEGA">Arduino Mega</option>
-			  <option value="NANO">Arduino Nano</option>
-			  <option value="BBC">BBC Microbit</option>
-			  <option value="EV3">Lego EV3</option>
-			</select>
-      <button id="runButton" class="notext primary icon" title="..."></button>
-    </div>
-
-      <button id="linkButton" class="notext icon" title="..."></button>
-
-      <button id="saveButton" class="notext icon" title="..."></button>
-
-      <button id="loadButton" class="notext icon" title="..."></button>
-
-      <button id="trashButton" class="notext icon" title="..."></button>
-
-      <button id="languageButton" class="notext icon" title="..."></button>
-
-      <button id="notificationButton" class="notext icon" title="..."></button>
-
-      <button id="forumButton" class="notext icon" title="..."></button>
-    </div>
-    </td>
+        <div class="logo">BIPES
+        </div>
+        <div class="tabs">
+          <div id="tab_blocks" class="tabon">...
+          </div>
+          <div id="tab_console" class="taboff">Console
+          </div>
+          <div id="tab_code" class="taboff">Code
+          </div>
+          <div id="tab_files" class="taboff">Files
+          </div>
+          <div id="tab_programs" class="taboff">Shared
+          </div>
+          <div id="tab_device" class="taboff">Device
+          </div>
+          <div id="tab_iot" class="taboff">IOT
+          </div>
+          <div id="tab_mqtt" class="taboff" onclick='document.getElementById("easymqtt_iframe").contentWindow.startEasyMQTT(window.easyMQTT_session);'>EasyMQTT
+          </div>
+        </div>
+        <script>
+        </script>
+        <button id="toolbarButton" class="notext icon medium" title="...">
+        </button>
+        <div class="toolbar">
+          <div id="serial_network">
+            <a class="icon selected" id="serialButton" href="https://bipes.net.br/beta2serial/ui" title="...">
+            </a>
+            <a class="icon" id="networkButton" href="http://bipes.net.br/beta2/ui" title="...">
+            </a>
+          </div>
+          <div class="icon" id="deviceSelect">
+            <select id="device_selector" onchange="changeDevice(this.value)">
+              <option value="ESP8266">ESP8266
+              </option>
+              <option value="ESP32S2">Franzininho Wifi (ESP32-S2)
+              </option>
+              <option value="ESP32">ESP32
+              </option>
+              <option value="ESP32-LoRa">ESP32 LoRa
+              </option>
+              <option value="Nucleo">ST Nucleo (mBed)
+              </option>
+              <option value="BBBlack">Beagle Bone Black
+              </option>
+              <option value="PocketBeagle">Pocket Beagle
+              </option>
+              <option value="LinkIt Smart">LinkIt Smart
+              </option>
+              <option value="RPI1">Raspberry Pi 1
+              </option>
+              <option value="RPI2">Raspberry Pi 2
+              </option>
+              <option value="RPI3">Raspberry Pi 3
+              </option>
+              <option value="RPI4">Raspberry Pi 4
+              </option>
+              <option value="RPI0">Raspberry Pi Zero
+              </option>
+              <option value="RPI_Pico">Raspberry Pi Pico
+              </option>
+              <option value="UNO">Arduino UNO
+              </option>
+              <option value="MEGA">Arduino Mega
+              </option>
+              <option value="NANO">Arduino Nano
+              </option>
+              <option value="BBC">BBC Microbit
+              </option>
+              <option value="EV3">Lego EV3
+              </option>
+            </select>
+            <button id="runButton" class="notext primary icon" title="...">
+            </button>
+          </div>
+          <button id="linkButton" class="notext icon" title="...">
+          </button>
+          <button id="saveButton" class="notext icon" title="...">
+          </button>
+          <button id="loadButton" class="notext icon" title="...">
+          </button>
+          <button id="trashButton" class="notext icon" title="...">
+          </button>
+          <button id="languageButton" class="notext icon" title="...">
+          </button>
+          <button id="notificationButton" class="notext icon" title="...">
+          </button>
+          <button id="forumButton" class="notext icon" title="...">
+          </button>
+        </div>
+      </td>
     </tr>
     <tr>
       <td height="99%" colspan=2 id="content_area">
       </td>
     </tr>
   </table>
-  <div id="content_blocks" class="content"></div>
+  <div id="content_blocks" class="content">
+  </div>
   <div id="content_console" class="content">
     <tr height="25%" id="termTR">
-     <td>
+      <td>
         <form>
-        <input type="text" name="webrepl_url" id="url" value="ws://192.168.0.16:8266/" disabled />
-        <input type="submit" id="button" value="Connect" disabled onclick="button_click(); return false;" />
-	<button id="SerialConnectButton" type="button" disabled>Connect (Web Serial)</button>
+          <input type="text" name="webrepl_url" id="url" value="ws://192.168.0.16:8266/" disabled />
+          <input type="submit" id="button" value="Connect" disabled onclick="button_click(); return false;" />
+          <button id="SerialConnectButton" type="button" disabled>Connect (Web Serial)
+          </button>
         </form>
-
-
         <div style="display:inline-block; vertical-align:top; ">
-            <div id="term">
-            </div>
+          <div id="term">
+          </div>
         </div>
-<!--        <br clear="both" />
-        <i>Terminal widget should be focused (text cursor visible) to accept input. Click on it if not.</i><br/>
-        <i>To paste, press Ctrl+A, then Ctrl+V</i> -->
-     </td>
-     <td>
+        <!--        <br clear="both" />
+<i>Terminal widget should be focused (text cursor visible) to accept input. Click on it if not.</i><br/>
+<i>To paste, press Ctrl+A, then Ctrl+V</i> -->
+      </td>
+      <td>
         <div id="file-boxes" style="display:inline-block; vertical-align:top; width:230px;">
-
-            <input type="button" value="Run block based program" onclick="runPython(); return false;" />
-	    <br>
-	    <br>
-            <input type="button" value="Stop running program" onclick="stopPython(); return false;" />
-	    <br>
-	    <br>
-	    <input type="button" value="Run edited Python File" onclick="files_run(document.getElementById('content_file_name').value); return false;" />
-	    <br>
-	    <br>
-	    <input type="button" value="Clear terminal output" onclick="term.write('\x1bc');  " />
-
-
-
-	    <!--
-            <div class="file-box">
-                <strong>Send a file</strong>
-                <input type="file" id="put-file-select" />
-                <div id="put-file-list"></div>
-                <input type="button" value="Send to device" id="put-file-button" onclick="put_file(); return false;" />
-            </div>
-          <div class="file-box">
-            <strong>Get a file</strong>
-            <input type="text" name="get_filename" id="get_filename" value="" size="13" />
-            <input type="button" value="Get from device" onclick="get_file(); return false;" />
-        </div>
-        <div class="file-box" id="file-status"><span style="color:#707070">(file operation status)</span></div>
-	    -->
-    </div>
-    </td>
-   </tr>
+          <input type="button" value="Run block based program" onclick="runPython(); return false;" />
+          <br>
+          <br>
+          <input type="button" value="Stop running program" onclick="stopPython(); return false;" />
+          <br>
+          <br>
+          <input type="button" value="Run edited Python File" onclick="files_run(document.getElementById('content_file_name').value); return false;" />
+          <br>
+          <br>
+          <input type="button" value="Clear terminal output" onclick="term.write('\x1bc');  " />
+          <!--
+<div class="file-box">
+<strong>Send a file</strong>
+<input type="file" id="put-file-select" />
+<div id="put-file-list"></div>
+<input type="button" value="Send to device" id="put-file-button" onclick="put_file(); return false;" />
 </div>
-
-
-<!-- ################################################## -->
+<div class="file-box">
+<strong>Get a file</strong>
+<input type="text" name="get_filename" id="get_filename" value="" size="13" />
+<input type="button" value="Get from device" onclick="get_file(); return false;" />
+</div>
+<div class="file-box" id="file-status"><span style="color:#707070">(file operation status)</span></div>
+-->
+        </div>
+      </td>
+    </tr>
+  </div>
+  <!-- ################################################## -->
   <div id="content_code" class="content">
     <details open>
       <summary>
-        <span>Python</span>
-        <button id="editAsFileButton" title="..."></button>
+        <span>Python
+        </span>
+        <button id="editAsFileButton" title="...">
+        </button>
       </summary>
-      <pre id="content_python"></pre>
+      <pre id="content_python">
+</pre>
     </details>
     <details>
       <summary>
-        <span>XML</span>
+        <span>XML
+        </span>
       </summary>
-      <pre id="content_xml"></pre>
+      <pre id="content_xml">
+</pre>
     </details>
   </div>
-
-<!-- ################################################## -->
-
+  <!-- ################################################## -->
   <div id="content_programs" class="content">
-	  <center>
-		      <iframe src="shared.html" width="100%" height="500" frameBorder="0"></iframe>
-
-	  </center>
+    <center>
+      <iframe src="shared.html" width="100%" height="500" frameBorder="0">
+      </iframe>
+    </center>
   </div>
-
-
-<!-- ################################################## -->
-
+  <!-- ################################################## -->
   <div id="content_device" class="content">
-	  <center>
-		  <label id="device_title"><b>ESP8266</b><br></label>
-	  <br>
-	  <img id="device_img" src="devinfo/Node-MCU-ESP-12E-Pin-Out-Diagram2.jpg">
-	  <br>
-
-	  <label id="device_desc">Description about chosen device</label>
-	  </center>
-
+    <center>
+      <label id="device_title">
+        <b>ESP8266
+        </b>
+        <br>
+      </label>
+      <br>
+      <img id="device_img" src="devinfo/Node-MCU-ESP-12E-Pin-Out-Diagram2.jpg">
+      <br>
+      <label id="device_desc">Description about chosen device
+      </label>
+    </center>
   </div>
-
-
-<!-- ################################################## -->
-
+  <!-- ################################################## -->
   <div id="content_files" class="content">
-
-<div style="width: 50%; float:left">
-	<center>
-		<font color=red>Important:</font> this tab features are fully functional in the network version, but in development in the USB/Serial (beta2serial) BIPES version.
-	<br>
- Text editor for files in device's filesystem:
-	</center>
-		    <br>
-  <textarea id="content_file_code" cols=90 rows=20 wrap="off"></textarea>
-  <br>
-  Save as:
-  <input type=text id=content_file_name>
-  <input type="button" value="Save" onclick="files_save_as(); return false;" />
-  <input type="button" value="Run" onclick="files_run(document.getElementById('content_file_name').value); return false;" />
-  <input type="button" value="Stop" onclick="stopPython(); return false;" />
-
-  <link rel="stylesheet" href="codemirror/codemirror.css">
-<script src="codemirror/codemirror.js"></script>
-<script src="codemirror/mode/python/python.js"></script>
-<script>
-  var editor = CodeMirror.fromTextArea(content_file_code, {
-    lineNumbers: true,
-    mode: "python"
-  });
-</script>
-
-
-</div>
-
-<div style="width: 50%; float:right">
-
-	  <center>
-Device file manager
-<br>
-
-  <div id="file-boxes" style="display:inline-block; vertical-align:top; width:230px;">
-
-            <input type="button" value="Run Blocks" onclick="runPython(); return false;" />
-            <input type="button" value="List Files" onclick="listFiles(); return false;" />
-	    <br>
-            <input type="button" value="Blocks to editable Python (here)" onclick="blocksToPython(); return false;" />
-
-	    <!--
-            <input type="button" value="Test" onclick="updateTable(); return false;" />
-	    -->
-            <div class="file-box">
-                <strong>Send a file</strong>
-                <input type="file" id="put-file-select" />
-                <div id="put-file-list"></div>
-                <input type="button" value="Send to device" id="put-file-button" onclick="put_file(); return false;" />
-            </div>
-        <div class="file-box" id="file-status"><span style="color:#707070">(file operation status)</span></div>
+    <div style="width: 50%; float:left">
+      <center>
+        <font color=red>Important:
+        </font> this tab features are fully functional in the network version, but in development in the USB/Serial (beta2serial) BIPES version.
+        <br>
+        Text editor for files in device's filesystem:
+      </center>
+      <br>
+      <textarea id="content_file_code" cols=90 rows=20 wrap="off">
+      </textarea>
+      <br>
+      Save as:
+      <input type=text id=content_file_name>
+      <input type="button" value="Save" onclick="files_save_as(); return false;" />
+      <input type="button" value="Run" onclick="files_run(document.getElementById('content_file_name').value); return false;" />
+      <input type="button" value="Stop" onclick="stopPython(); return false;" />
+      <link rel="stylesheet" href="codemirror/codemirror.css">
+      <script src="codemirror/codemirror.js">
+      </script>
+      <script src="codemirror/mode/python/python.js">
+      </script>
+      <script>
+        var editor = CodeMirror.fromTextArea(content_file_code, {
+          lineNumbers: true,
+          mode: "python"
+        }
+                                            );
+      </script>
     </div>
- </td>
-
-  </div>
-	  <center>
-		  <br>
-		  <br>
-		  <div id="fileList">
-			List of files will be shown here.
-		  </div>
-
-</div>
-
-
-<!-- ################################################## -->
-
-  <div id="content_iot" class="content">
-     <iframe id="content_iot" src="freeboard/index.html?load=dashboard.json" width="100%" height="100%" frameBorder="0"></iframe>
-  </div>
-
-<!-- ################################################## -->
-
-<div id="content_mqtt" class="content" style="padding: 0;">
-  <iframe id="easymqtt_iframe" src="../easymqtt/index.html" width="100%" height="100%" frameBorder="0"></iframe>
-</div>
-
-<!-- ################################################## -->
-
-
-
-  <div class="notify"></div>
-  <div class="notify-panel"></div>
-  <div class="language-panel">
-      <select id="languageMenu"></select>
-  </div>
-</body>
-
-<script>
-;
-
-var term;
-var ws;
-var connected = false;
-var binary_state = 0;
-var put_file_name = null;
-var put_file_data = null;
-var get_file_name = null;
-var get_file_data = null;
-var received_string = "";
-var received_string2 = "";
-var gtCnt=0;
-var viewOnly = false;
-
-//Received lines on the serial buffer
-var lineIn = "";
-var linesIn = "";
-var lineCnt=0;
-
-function calculate_size(win) {
-//    var cols = Math.max(80, Math.min(150, (win.innerWidth - 280) / 7)) | 0;
-//   var rows = Math.max(5, Math.min(80, (win.innerHeight - 250) / 12)) | 0;
-  var cols = 120;
-  var rows = 25;
-    return [cols, rows];
-}
-
-// Init blockly
-Code.init ();
-
-// global BIPES ui variable
-var BIPES = {};
-// Setup UI using global BIPES variable (see ui.js)
-BIPES ['responsive'] = new responsive ();
-BIPES ['notify'] = new notify ();
-BIPES ['language'] = new language ('#languageButton','.language-panel');
-BIPES ['notify-panel'] = new panel ('#notificationButton','.notify-panel');
-BIPES ['toolbar'] = new panel ('#toolbarButton','.toolbar');
-BIPES ['workspace'] = new workspace ();
-
-(function() {
-    window.onload = function() {
-      dom  = document.getElementById("termTR")
-      var size = calculate_size(dom /* self */);
-      term = new Terminal({
-        cols: size[0],
-        rows: size[1],
-        useStyle: true,
-        screenKeys: true,
-        cursorBlink: false
-      });
-      term.open(document.getElementById("term"));
-      show_https_warning();
-      loadPage();
+    <div style="width: 50%; float:right">
+      <center>
+        Device file manager
+        <br>
+        <div id="file-boxes" style="display:inline-block; vertical-align:top; width:230px;">
+          <input type="button" value="Run Blocks" onclick="runPython(); return false;" />
+          <input type="button" value="List Files" onclick="listFiles(); return false;" />
+          <br>
+          <input type="button" value="Blocks to editable Python (here)" onclick="blocksToPython(); return false;" />
+          <!--
+<input type="button" value="Test" onclick="updateTable(); return false;" />
+-->
+          <div class="file-box">
+            <strong>Send a file
+            </strong>
+            <input type="file" id="put-file-select" />
+            <div id="put-file-list">
+            </div>
+            <input type="button" value="Send to device" id="put-file-button" onclick="put_fileBox(); return false;" />
+          </div>
+          <div class="file-box" id="file-status">
+            <span style="color:#707070">(file operation status)
+            </span>
+          </div>
+        </div>
+        </td>
+    </div>
+    <center>
+      <br>
+      <br>
+      <div id="fileList">
+        List of files will be shown here.
+      </div>
+      </div>
+    <!-- ################################################## -->
+    <div id="content_iot" class="content">
+      <iframe id="content_iot" src="freeboard/index.html?load=dashboard.json" width="100%" height="100%" frameBorder="0">
+      </iframe>
+    </div>
+    <!-- ################################################## -->
+    <div id="content_mqtt" class="content" style="padding: 0;">
+      <iframe id="easymqtt_iframe" src="../easymqtt/index.html" width="100%" height="100%" frameBorder="0">
+      </iframe>
+    </div>
+    <!-- ################################################## -->
+    <div class="notify">
+    </div>
+    <div class="notify-panel">
+    </div>
+    <div class="language-panel">
+      <select id="languageMenu">
+      </select>
+    </div>
+    </body>
+  <script>
+    ;
+    var term;
+    var ws;
+    var connected = false;
+    var binary_state = 0;
+    var put_file_name = null;
+    var put_file_data = null;
+    var get_file_name = null;
+    var get_file_data = null;
+    var received_string = "";
+    var received_string2 = "";
+    var gtCnt=0;
+    var ptCnt=0;
+    var fileBox=0;
+    var lastChar='';
+    var waitingFile=0;
+    var viewOnly = false;
+    //Received lines on the serial buffer
+    var lineIn = "";
+    var linesIn = "";
+    var lineCnt=0;
+    function calculate_size(win) {
+      //    var cols = Math.max(80, Math.min(150, (win.innerWidth - 280) / 7)) | 0;
+      //   var rows = Math.max(5, Math.min(80, (win.innerHeight - 250) / 12)) | 0;
+      var cols = 120;
+      var rows = 25;
+      return [cols, rows];
+    }
+    // Init blockly
+    Code.init ();
+    // global BIPES ui variable
+    var BIPES = {
     };
-    window.addEventListener('resize', function() {
+    // Setup UI using global BIPES variable (see ui.js)
+    BIPES ['responsive'] = new responsive ();
+    BIPES ['notify'] = new notify ();
+    BIPES ['language'] = new language ('#languageButton','.language-panel');
+    BIPES ['notify-panel'] = new panel ('#notificationButton','.notify-panel');
+    BIPES ['toolbar'] = new panel ('#toolbarButton','.toolbar');
+    BIPES ['workspace'] = new workspace ();
+    (function() {
+      window.onload = function() {
+        dom  = document.getElementById("termTR")
+        var size = calculate_size(dom /* self */);
+        term = new Terminal({
+          cols: size[0],
+          rows: size[1],
+          useStyle: true,
+          screenKeys: true,
+          cursorBlink: false
+        }
+                           );
+        term.open(document.getElementById("term"));
+        show_https_warning();
+        loadPage();
+      };
+      window.addEventListener('resize', function() {
         dom  = document.getElementById("termTR")
         var size = calculate_size(dom);
-      //  term.resize(size[0], size[1]);
-    });
-}).call(this);
-
-function show_https_warning() {
-	return;
-    if (window.location.protocol == 'https:') {
+        //  term.resize(size[0], size[1]);
+      }
+                             );
+    }
+    ).call(this);
+    function show_https_warning() {
+      return;
+      if (window.location.protocol == 'https:') {
         var warningDiv = document.createElement('div');
         warningDiv.style.cssText = 'background:#f99;padding:5px;margin-bottom:10px;line-height:1.5em;text-align:center';
         warningDiv.innerHTML = [
-            'At this time, the WebREPL client cannot be accessed over HTTPS connections.',
-            'Use a HTTP connection, eg. <a href="http://micropython.org/webrepl/">http://micropython.org/webrepl/</a>.',
-            'Alternatively, download the files from <a href="https://github.com/micropython/webrepl">GitHub</a> and run them locally.'
+          'At this time, the WebREPL client cannot be accessed over HTTPS connections.',
+          'Use a HTTP connection, eg. <a href="http://micropython.org/webrepl/">http://micropython.org/webrepl/</a>.',
+          'Alternatively, download the files from <a href="https://github.com/micropython/webrepl">GitHub</a> and run them locally.'
         ].join('<br>');
         document.body.insertBefore(warningDiv, document.body.childNodes[0]);
         term.resize(term.cols, term.rows - 7);
+      }
     }
-}
-
-function button_click() {
-    if (connected) {
+    function button_click() {
+      if (connected) {
         ws.close();
-    } else {
+      }
+      else {
         document.getElementById('url').disabled = true;
         document.getElementById('button').value = "Disconnect";
         connected = true;
         connect(document.getElementById('url').value);
+      }
     }
-}
-
-function prepare_for_connect() {
-    document.getElementById('url').disabled = false;
-    document.getElementById('button').value = "Connect";
-}
-
-function update_file_status(s) {
-    document.getElementById('file-status').innerHTML = s;
-}
-
-function connect(url) {
-    ws = new WebSocket(url);
-    ws.binaryType = 'arraybuffer';
-    ws.onopen = function() {
+    function prepare_for_connect() {
+      document.getElementById('url').disabled = false;
+      document.getElementById('button').value = "Connect";
+    }
+    function update_file_status(s) {
+      document.getElementById('file-status').innerHTML = s;
+    }
+    function connect(url) {
+      ws = new WebSocket(url);
+      ws.binaryType = 'arraybuffer';
+      ws.onopen = function() {
         term.removeAllListeners('data');
         term.on('data', function(data) {
-            // Pasted data from clipboard will likely contain
-            // LF as EOL chars.
-            data = data.replace(/\n/g, "\r");
-            serialWrite(data);
-        });
-
-
+          // Pasted data from clipboard will likely contain
+          // LF as EOL chars.
+          data = data.replace(/\n/g, "\r");
+          serialWrite(data);
+        }
+               );
         term.on('title', function(title) {
-            document.title = title;
-        });
-
+          document.title = title;
+        }
+               );
         term.focus();
         term.element.focus();
         term.write('\x1b[31mWelcome to BIPES Project using MicroPython!\x1b[m\r\n');
-
-
         ws.onmessage = function(event) {
-            if (event.data instanceof ArrayBuffer) {
-                var data = new Uint8Array(event.data);
-                switch (binary_state) {
-                    case 11:
-                        // first response for put
-                        if (decode_resp(data) == 0) {
-                            // send file data in chunks
-                            for (var offset = 0; offset < put_file_data.length; offset += 1024) {
-                                serialWrite(put_file_data.slice(offset, offset + 1024));
-                            }
-                            binary_state = 12;
-                        }
-                        break;
-                    case 12:
-                        // final response for put
-                        if (decode_resp(data) == 0) {
-                            update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
-                        } else {
-                            update_file_status('Failed sending ' + put_file_name);
-                        }
-                        binary_state = 0;
-                        break;
-
-                    case 21:
-                        // first response for get
-			console.log('get 1');
-                        if (decode_resp(data) == 0) {
-			    console.log('get 2');
-                            binary_state = 22;
-                            var rec = new Uint8Array(1);
-                            rec[0] = 0;
-                            serialWrite(rec);
-                        }
-                        break;
-                    case 22: {
-                        // file data
-                        var sz = data[0] | (data[1] << 8);
-                        if (data.length == 2 + sz) {
-                            // we assume that the data comes in single chunks
-                            if (sz == 0) {
-                                // end of file
-                                binary_state = 23;
-                            } else {
-                                // accumulate incoming data to get_file_data
-                                var new_buf = new Uint8Array(get_file_data.length + sz);
-                                new_buf.set(get_file_data);
-                                new_buf.set(data.slice(2), get_file_data.length);
-                                get_file_data = new_buf;
-                                update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-
-                                var rec = new Uint8Array(1);
-                                rec[0] = 0;
-                                serialWrite(rec);
-                            }
-                        } else {
-                            binary_state = 0;
-                        }
-                        break;
-                    }
-                    case 23:
-                        // final response
-                        if (decode_resp(data) == 0) {
-                            update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                            if (!viewOnly)
-				saveAs(new Blob([get_file_data], {type: "application/octet-stream"}), get_file_name);
-			    else
-				//updateSourceCode([get_file_data]);
-				updateSourceCode(new Blob([get_file_data], {type: "text/plain"}), get_file_name);
-                        } else {
-                            update_file_status('Failed getting ' + get_file_name);
-                        }
-                        binary_state = 0;
-                        break;
-                    case 31:
-                        // first (and last) response for GET_VER
-                        console.log('GET_VER', data);
-                        binary_state = 0;
-                        break;
+          if (event.data instanceof ArrayBuffer) {
+            var data = new Uint8Array(event.data);
+            switch (binary_state) {
+              case 11:
+                // first response for put
+                if (decode_resp(data) == 0) {
+                  // send file data in chunks
+                  for (var offset = 0; offset < put_file_data.length; offset += 1024) {
+                    serialWrite(put_file_data.slice(offset, offset + 1024));
+                  }
+                  binary_state = 12;
                 }
+                break;
+              case 12:
+                // final response for put
+                if (decode_resp(data) == 0) {
+                  update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
+                }
+                else {
+                  update_file_status('Failed sending ' + put_file_name);
+                }
+                binary_state = 0;
+                break;
+              case 21:
+                // first response for get
+                console.log('get 1');
+                if (decode_resp(data) == 0) {
+                  console.log('get 2');
+                  binary_state = 22;
+                  var rec = new Uint8Array(1);
+                  rec[0] = 0;
+                  serialWrite(rec);
+                }
+                break;
+              case 22: {
+                // file data
+                var sz = data[0] | (data[1] << 8);
+                if (data.length == 2 + sz) {
+                  // we assume that the data comes in single chunks
+                  if (sz == 0) {
+                    // end of file
+                    binary_state = 23;
+                  }
+                  else {
+                    // accumulate incoming data to get_file_data
+                    var new_buf = new Uint8Array(get_file_data.length + sz);
+                    new_buf.set(get_file_data);
+                    new_buf.set(data.slice(2), get_file_data.length);
+                    get_file_data = new_buf;
+                    update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
+                    var rec = new Uint8Array(1);
+                    rec[0] = 0;
+                    serialWrite(rec);
+                  }
+                }
+                else {
+                  binary_state = 0;
+                }
+                break;
+              }
+              case 23:
+                // final response
+                if (decode_resp(data) == 0) {
+                  update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
+                  if (!viewOnly)
+                    saveAs(new Blob([get_file_data], {
+                      type: "application/octet-stream"}
+                                   ), get_file_name);
+                  else
+                    //updateSourceCode([get_file_data]);
+                    updateSourceCode(new Blob([get_file_data], {
+                      type: "text/plain"}
+                                             ), get_file_name);
+                }
+                else {
+                  update_file_status('Failed getting ' + get_file_name);
+                }
+                binary_state = 0;
+                break;
+              case 31:
+                // first (and last) response for GET_VER
+                console.log('GET_VER', data);
+                binary_state = 0;
+                break;
             }
-            term.write(event.data);
-
-	    //byte by byte...
-	    //alert(event.data);
-	    received_string = received_string.concat(event.data);
+          }
+          term.write(event.data);
+          //byte by byte...
+          //alert(event.data);
+          received_string = received_string.concat(event.data);
         };
-    };
-
-    ws.onclose = function() {
+      };
+      ws.onclose = function() {
         connected = false;
         if (term) {
-            term.write('\x1b[31mDisconnected\x1b[m\r\n');
+          term.write('\x1b[31mDisconnected\x1b[m\r\n');
         }
         term.off('data');
         prepare_for_connect();
+      }
     }
-}
-
-function decode_resp(data) {
-    if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
+    function decode_resp(data) {
+      if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
         var code = data[2] | (data[3] << 8);
         return code;
-    } else {
+      }
+      else {
         return -1;
+      }
     }
-}
-
-function put_file() {
-    var dest_fname = put_file_name;
-    var dest_fsize = put_file_data.length;
-
-    //console.log(put_file_name);
-    //console.log(put_file_data);
-
-    // WEBREPL_FILE = "<2sBBQLH64s"
-    var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
-    rec[0] = 'W'.charCodeAt(0);
-    rec[1] = 'A'.charCodeAt(0);
-    rec[2] = 1; // put
-    rec[3] = 0;
-    rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
-    rec[12] = dest_fsize & 0xff; rec[13] = (dest_fsize >> 8) & 0xff; rec[14] = (dest_fsize >> 16) & 0xff; rec[15] = (dest_fsize >> 24) & 0xff;
-    rec[16] = dest_fname.length & 0xff; rec[17] = (dest_fname.length >> 8) & 0xff;
-    for (var i = 0; i < 64; ++i) {
-        if (i < dest_fname.length) {
-            rec[18 + i] = dest_fname.charCodeAt(i);
-        } else {
-            rec[18 + i] = 0;
-        }
+    function escapeB(s) {
+      return ('' + s);
+      //        .replace(/\\/g, '\\\\')
+      //        .replace(/\t/g, '\\t')
+      //        .replace(/\n/g, '\\n')
+      //        .replace(/\u00A0/g, '\\u00A0')
+      //        .replace(/&/g, '\\x26')
+      //        .replace(/'/g, "\\'")
+      //        .replace(/"/g, '\\"');
+      //        .replace(/</g, '\\x3C')
+      //        .replace(/>/g, '\\x3E');
     }
-
-    // initiate put
-    binary_state = 11;
-    update_file_status('Sending ' + put_file_name + '...');
-    serialWrite(rec);
-}
-
-
-function get_file2(src_fname) {
-
-	// initiate get
-	binary_state = 91;
-	get_file_name = src_fname;
-	update_file_status('Getting ' + get_file_name + '...');
-
-	//ctrl-C twice: interrupt any running program
-        serialWrite('\r\x03');
-        sleep(30);
-        serialWrite('\r\x03');
-        sleep(30);
-
-	seerialWrite('\r\x01') // ctrl-A: enter raw REPL
-
-	//serialWrite('\x02'); //Send CTRL+E
-	//serialWrite('\x03');
-	//serialWrite('\x03');
-	//serialWrite('\x04');
-
-	received_string="";
-	serialWrite("\nimport sys\n");
-	serialWrite("with open('" + get_file_name + "', 'rb') as infile:\n    while True:\n        result = infile.read(32)\n        if result == b'':\n            break\n        len = sys.stdout.write(result)\n");
-	sleep(30);
-	serialWrite('\x02'); //Send CTRL+B
-
-}
-
-
-
-
-function get_file() {
-    var src_fname = document.getElementById('get_filename').value;
-
-    // WEBREPL_FILE = "<2sBBQLH64s"
-    var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
-    rec[0] = 'W'.charCodeAt(0);
-    rec[1] = 'A'.charCodeAt(0);
-    rec[2] = 2; // get
-    rec[3] = 0;
-    rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
-    rec[12] = 0; rec[13] = 0; rec[14] = 0; rec[15] = 0;
-    rec[16] = src_fname.length & 0xff; rec[17] = (src_fname.length >> 8) & 0xff;
-    for (var i = 0; i < 64; ++i) {
+    function put_fileBox() {
+	put_file();
+	fileBox=1;
+    }
+    function put_file() {
+      var dest_fname = put_file_name;
+      var dest_fsize = put_file_data.length;
+      console.log("Name: " + put_file_name);
+      console.log("Data: " + put_file_data);
+      update_file_status('Sending (USB) ' + put_file_name + '...');
+      //ctrl-C twice: interrupt any running program
+      serialWrite('\r\x03\x03');
+      sleep(10);
+      serialWrite("f=open('" + put_file_name + "', 'wb')\r");
+      var arr = put_file_data.split("\n");
+      for (var i = 0; i < arr.length; i++)
+      {
+        console.log("In: " + arr[i]);
+        cmd=arr[i];
+        cmde2=escapeB(cmd);
+        console.log("Escaped: " + cmde2);
+	if (fileBox==1)
+		cmdF="f.write(b'" + cmde2 + "')\r";
+	else
+		cmdF="f.write(b'" + cmde2 + '\\n' + "')\r";
+        console.log("Sending: " + cmdF);
+        serialWrite(cmdF);
+        sleep(5);
+      }
+      serialWrite("f.close()\r");
+      //write(3, “f = open(‘test.txt’, ‘wb’)”, 26) = 26
+      //write(3, “\4”, 1) = 1
+      //read(3, “OK”, 2) = 2
+      //read(3, “\4”, 1) = 1
+      //read(3, “\4”, 1) = 1
+      //read(3, “>”, 1) = 1
+      //write(3, “f.write(b’123\\n’)”, 17) = 17
+      //write(3, “\4”, 1) = 1
+      //read(3, “OK”, 2) = 2
+      //read(3, “\4”, 1) = 1
+      //read(3, “\4”, 1) = 1
+      //read(3, “>”, 1) = 1
+      //write(3, “f.close()”, 9) = 9
+      serialWrite('\r');
+      serialWrite('\r');
+      serialWrite('\r');
+      //serialWrite('\x04');
+      //sleep(10);
+      //serialWrite('\r\x02'); //Send CTRL+B
+      update_file_status('File ' + put_file_name + ' sent.');
+      fileBox=0;
+    }
+    function get_file2(src_fname) {
+      // initiate get
+      binary_state = 91;
+      get_file_name = src_fname;
+      update_file_status('Getting ' + get_file_name + '...');
+      //ctrl-C twice: interrupt any running program
+      serialWrite('\r\x03\x03');
+      sleep(10);
+      //serialWrite('\r\x01') // ctrl-A: enter raw REPL
+      //sleep(10);
+      //serialWrite('\x04');
+      //sleep(100);
+      //serialWrite('\x03');
+      //sleep(10);
+      //serialWrite('\x03');
+      //sleep(10);
+      serialWrite("\rimport sys\r");
+      sleep(10);
+      serialWrite("with open('" + get_file_name + "', 'rb') as infile:\rwhile True:\rresult = infile.read(32)\rif result == b'':\rbreak\r\blen = sys.stdout.write(result)\r");
+      sleep(10);
+      received_string="";
+      received_string2="";
+      waitingFile=1;
+      serialWrite('\r');
+      serialWrite('\r');
+      serialWrite('\r');
+      //serialWrite('\x04');
+      sleep(10);
+      //serialWrite('\r\x02'); //Send CTRL+B
+      var TextareaF = document.getElementById('content_file_name');
+      TextareaF.value = get_file_name;
+    }
+    function get_file() {
+      var src_fname = document.getElementById('get_filename').value;
+      // WEBREPL_FILE = "<2sBBQLH64s"
+      var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
+      rec[0] = 'W'.charCodeAt(0);
+      rec[1] = 'A'.charCodeAt(0);
+      rec[2] = 2;
+      // get
+      rec[3] = 0;
+      rec[4] = 0;
+      rec[5] = 0;
+      rec[6] = 0;
+      rec[7] = 0;
+      rec[8] = 0;
+      rec[9] = 0;
+      rec[10] = 0;
+      rec[11] = 0;
+      rec[12] = 0;
+      rec[13] = 0;
+      rec[14] = 0;
+      rec[15] = 0;
+      rec[16] = src_fname.length & 0xff;
+      rec[17] = (src_fname.length >> 8) & 0xff;
+      for (var i = 0; i < 64; ++i) {
         if (i < src_fname.length) {
-            rec[18 + i] = src_fname.charCodeAt(i);
-        } else {
-            rec[18 + i] = 0;
+          rec[18 + i] = src_fname.charCodeAt(i);
         }
+        else {
+          rec[18 + i] = 0;
+        }
+      }
+      // initiate get
+      binary_state = 21;
+      get_file_name = src_fname;
+      get_file_data = new Uint8Array(0);
+      update_file_status('Getting ' + get_file_name + '...');
+      serialWriteE(rec);
     }
-
-    // initiate get
-    binary_state = 21;
-    get_file_name = src_fname;
-    get_file_data = new Uint8Array(0);
-    update_file_status('Getting ' + get_file_name + '...');
-    serialWriteE(rec);
-}
-
-function get_ver() {
-    // WEBREPL_REQ_S = "<2sBBQLH64s"
-    var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
-    rec[0] = 'W'.charCodeAt(0);
-    rec[1] = 'A'.charCodeAt(0);
-    rec[2] = 3; // GET_VER
-    // rest of "rec" is zero
-
-    // initiate GET_VER
-    binary_state = 31;
-    serialWrite(rec);
-}
-
-function handle_put_file_select(evt) {
-    // The event holds a FileList object which is a list of File objects,
-    // but we only support single file selection at the moment.
-    var files = evt.target.files;
-
-    // Get the file info and load its data.
-    var f = files[0];
-    put_file_name = f.name;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        put_file_data = new Uint8Array(e.target.result);
+    function get_ver() {
+      // WEBREPL_REQ_S = "<2sBBQLH64s"
+      var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
+      rec[0] = 'W'.charCodeAt(0);
+      rec[1] = 'A'.charCodeAt(0);
+      rec[2] = 3;
+      // GET_VER
+      // rest of "rec" is zero
+      // initiate GET_VER
+      binary_state = 31;
+      serialWrite(rec);
+    }
+    function handle_put_file_select(evt) {
+      // The event holds a FileList object which is a list of File objects,
+      // but we only support single file selection at the moment.
+      var files = evt.target.files;
+      // Get the file info and load its data.
+      var f = files[0];
+      put_file_name = f.name;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        //put_file_data = new Uint8Array(e.target.result);
+        put_file_data = e.target.result;
         document.getElementById('put-file-list').innerHTML = '' + escape(put_file_name) + ' - ' + put_file_data.length + ' bytes';
         document.getElementById('put-file-button').disabled = false;
-    };
-    reader.readAsArrayBuffer(f);
-}
-
-document.getElementById('put-file-select').addEventListener('click', function(){
-    this.value = null;
-}, false);
-
-document.getElementById('put-file-select').addEventListener('change', handle_put_file_select, false);
-document.getElementById('put-file-button').disabled = true;
-
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-
-function stopPython(evt) {
-	//Send Ctrl+C to stop program
-        //ws.send('\x03');
-	serialWrite('\x03');
-}
-
-function saveXml() {
-
-        Code.tabClick('xml');
-
-        var xmlTextarea = document.getElementById('content_xml');
-        var xmlText = xmlTextarea.value;
-
-        function dataUrl(data) {
-                return "data:x-application/xml;charset=utf-8," + escape(data);
+      };
+      //reader.readAsArrayBuffer(f);
+      reader.readAsBinaryString(f);
+    }
+    document.getElementById('put-file-select').addEventListener('click', function(){
+      this.value = null;
+    }
+                                                                , false);
+    document.getElementById('put-file-select').addEventListener('change', handle_put_file_select, false);
+    document.getElementById('put-file-button').disabled = true;
+    function sleep(milliseconds) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+        currentDate = Date.now();
+      }
+      while (currentDate - date < milliseconds);
+    }
+    function stopPython(evt) {
+      //Send Ctrl+C to stop program
+      //ws.send('\x03');
+      serialWrite('\x03');
+    }
+    function saveXml() {
+      Code.tabClick('xml');
+      var xmlTextarea = document.getElementById('content_xml');
+      var xmlText = xmlTextarea.value;
+      function dataUrl(data) {
+        return "data:x-application/xml;charset=utf-8," + escape(data);
+      }
+      var downloadLink = document.createElement("a");
+      downloadLink.href = dataUrl(xmlText);
+      downloadLink.download = "bipes_blocks.xml";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+    function promptFilename() {
+      promptFile().then(function(file) {
+        //alert(file.name);
+        var reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+        reader.onload = readerEvent => {
+          var content = readerEvent.target.result;
+          console.log("Loading blocks from file...");
+          console.log( content );
+          var xml = Blockly.Xml.textToDom(content);
+          Blockly.Xml.domToWorkspace(xml, Code.workspace);
+          alert("Blocks loaded from file " + file.name );
         }
-
-        var downloadLink = document.createElement("a");
-        downloadLink.href = dataUrl(xmlText);
-        downloadLink.download = "bipes_blocks.xml";
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-
-
-}
-
-function promptFilename() {
-  promptFile().then(function(file) {
-          //alert(file.name);
-
-          var reader = new FileReader();
-          reader.readAsText(file,'UTF-8');
-
-          reader.onload = readerEvent => {
-              var content = readerEvent.target.result;
-              console.log("Loading blocks from file...");
-              console.log( content );
-              var xml = Blockly.Xml.textToDom(content);
-              Blockly.Xml.domToWorkspace(xml, Code.workspace);
-              alert("Blocks loaded from file " + file.name );
-          }
-
-  });
-}
-
-function loadXml() {
-        promptFilename();
-}
-
-function promptFile(contentType, multiple) {
-  var input = document.createElement("input");
-  input.type = "file";
-
-  input.multiple = false;
-  //input.multiple = multiple;
-  input.accept = contentType;
-  return new Promise(function(resolve) {
-    document.activeElement.onfocus = function() {
-      document.activeElement.onfocus = null;
-      setTimeout(resolve, 100);
-    };
-    input.onchange = function() {
-      var files = Array.from(input.files);
-      if (multiple)
-        return resolve(files);
-      resolve(files[0]);
-    };
-    input.click();
-  });
-}
-
-
-function runPythonCode(pCodeIn) {
-
-	/*
+      }
+                       );
+    }
+    function loadXml() {
+      promptFilename();
+    }
+    function promptFile(contentType, multiple) {
+      var input = document.createElement("input");
+      input.type = "file";
+      input.multiple = false;
+      //input.multiple = multiple;
+      input.accept = contentType;
+      return new Promise(function(resolve) {
+        document.activeElement.onfocus = function() {
+          document.activeElement.onfocus = null;
+          setTimeout(resolve, 100);
+        };
+        input.onchange = function() {
+          var files = Array.from(input.files);
+          if (multiple)
+            return resolve(files);
+          resolve(files[0]);
+        };
+        input.click();
+      }
+                        );
+    }
+    function runPythonCode(pCodeIn) {
+      /*
         if (!connected) {
                 alert('Must be connected to run code');
                 return;
         }
 	*/
-
-        var code = pCodeIn;
-        var textArray = code.split(/\r\n|\r|\n/);
-
-        console.log(code);
-        ws.send('\x05');
-        sleep(10);
-        textArray.forEach(function(line, index, array) {
-           ws.send(line+'\r');
-           sleep(15);
-        });
-        ws.send('\x04');
-
-}
-
-
-function runPython(evt) {
-
-	var devSel = document.getElementById("device_selector").value;
-
-	if (devSel == "UNO") {
-		alert("Generating code for Arduino Uno");
-		var code = Blockly.Arduino.workspaceToCode(Code.workspace);
-
-		return;
-	}
-
-
-
-	/*
+      var code = pCodeIn;
+      var textArray = code.split(/\r\n|\r|\n/);
+      console.log(code);
+      ws.send('\x05');
+      sleep(10);
+      textArray.forEach(function(line, index, array) {
+        ws.send(line+'\r');
+        sleep(15);
+      }
+                       );
+      ws.send('\x04');
+    }
+    function runPython(evt) {
+      var devSel = document.getElementById("device_selector").value;
+      if (devSel == "UNO") {
+        alert("Generating code for Arduino Uno");
+        var code = Blockly.Arduino.workspaceToCode(Code.workspace);
+        return;
+      }
+      /*
 	if (!connected) {
 		alert('Must be connected to run code');
 		return;
 	}
 	*/
-
-        var code = Blockly.Python.workspaceToCode(Code.workspace);
-        var textArray = code.split(/\r\n|\r|\n/);
-
-        console.log(code);
-        //ws.send('\x05');
-	serialWrite('\x05');
-	sleep(50);
-        textArray.forEach(function(line, index, array) {
-           //ws.send(line+'\r');
-	   serialWrite(line+'\r');
-	   sleep(25);
-        });
-        //ws.send('\x04');
-	serialWrite('\x04');
-
-}
-
-function files_run(file) {
-
-        update_file_status('Executing  ' + file);
-
-	//Filename without .py
-	fileS = file.split('.')[0];
-
-	//import only works once
-	//In case module already loaded, unloaded it
-	//to allow it to work all the time
-	serialWrite('import sys \r');
-	serialWrite('sys.modules.pop(\'' + fileS + '\')\r');
-
-	//Another way of executing a script
-	//ws.send( ==>> exec(open('./cardio.py').read(),globals())
-
-
-	serialWrite('import ' + fileS + '\r');
-
-}
-
-
-
-function files_delete(file) {
-
-	msg = "Are you sure you want to delete " + file + "?";
-
-	if (confirm(msg)) {
-		txt = "Will delete file " + file;
-		serialWrite('os.remove(\'' + file + '\')\r');
-		setTimeout(updateTable, 350);
-		update_file_status('Deleted  ' + file);
-	} else {
-		txt = "Delete aborted";
-		update_file_status('Delete aborted for ' + file);
-	}
-
-}
-
-
-function blocksToPython() {
-        var code = Blockly.Python.workspaceToCode(Code.workspace);
-	editor.getDoc().setValue(code);
-}
-
-function files_save_as() {
-	var file = document.getElementById('content_file_name');
-
-	//For standard textarea
-	//var Textarea = document.getElementById('content_file_code');
-	//var codeStr = Textarea.value;
-
-	//For codemirror
-	var codeStr = editor.getDoc().getValue("\n")
-
-	var bufCode = new Uint8Array(codeStr.length);
-	for (var i=0, strLen=codeStr.length; i < strLen; i++) {
-		bufCode[i] = codeStr.charCodeAt(i);
-	}
-
-        put_file_name = file.value;
-        put_file_data = bufCode;
-        //put_file_data = new Uint8Array(e.target.result);
-        //put_file_data = Textarea.value;
-
-	put_file();
-}
-
-function updateSourceCode(code, file_name) {
-
-	//const blb    = new Blob(["Lorem ipsum sit"], {type: "text/plain"});
-	blb = code;
-	const reader = new FileReader();
-	text="";
-
-	// This fires after the blob has been read/loaded.
-	reader.addEventListener('loadend', (e) => {
-		text = e.srcElement.result;
-		console.log(text);
-
-		//Works for standard <inpyt type=textarea...
-		var Textarea = document.getElementById('content_file_code');
-		//Works for standard textarea. Commented for codemirror usage
-		//Textarea.value = text;
-
-		//For codemirror
-		//var editor = CodeMirror.fromTextArea(Textarea);
-		editor.getDoc().setValue(text);
-
-		var TextareaF = document.getElementById('content_file_name');
-		TextareaF.value = file_name;
-
-	});
-
-	// Start reading the blob as text.
-	reader.readAsText(blb);
-
-
-}
-
-function files_view(file) {
-	str = "Loading " + file;
-	//alert(str);
-	viewOnly=true;
-	get_file2(file);
-	update_file_status('Downloading ' + file);
-	str = "Loaded " + file;
-}
-
-function files_download(file) {
-	str = "Download " + file;
-	viewOnly=false;
-	//alert(str);
-	get_file2(file);
-	update_file_status('Downloading ' + file);
-}
-
-function updateTable(evt) {
-
-	filesA = received_string.split('[')[1];
-	filesB = filesA.split(']')[0];
-	filesC = filesB.split('"'[0]);
-	filesD = eval("[" + filesC + "]");
-
-	fileTable = "Device File List: <br> <br> <table border=2> ";
-						       fileTable += "<tr><td><center>File</center></td><td><center>Actions</center></td><td>Run at boot?</td></tr>";
-
-	//Build table with files on device and actions
-	for(var i=0, len=filesD.length; i < len; i++){
-
-		//File name
-		file = filesD[i];
-		fileTable += "<tr><td>" + file + "</td><td>";
-
-		//Action buttons
-		fileTable += '<input type=button value=Run onclick="files_run(\'' + file + '\'); return false;" />';
-		fileTable += '<input type=button value=Open onclick="files_view(\'' + file + '\'); return false;" />';
-		fileTable += '<input type=button value=Download onclick="files_download(\'' + file + '\'); return false;" />';
-		fileTable += '<input type=button value=Delete onclick="files_delete(\'' + file + '\'); return false;" />';
-
-		fileTable += "</td><td><center>No</center></td></tr>";
-	}
-
-	fileTable += "</table>";
-	dom  = document.getElementById("fileList");
-	dom.innerHTML = fileTable;
-}
-
-function listFiles(evt) {
-/*
+      var code = Blockly.Python.workspaceToCode(Code.workspace);
+      var textArray = code.split(/\r\n|\r|\n/);
+      console.log(code);
+      //ws.send('\x05');
+      serialWrite('\x05');
+      sleep(50);
+      textArray.forEach(function(line, index, array) {
+        //ws.send(line+'\r');
+        serialWrite(line+'\r');
+        sleep(25);
+      }
+                       );
+      //ws.send('\x04');
+      serialWrite('\x04');
+    }
+    function files_run(file) {
+      update_file_status('Executing  ' + file);
+      //Filename without .py
+      fileS = file.split('.')[0];
+      //import only works once
+      //In case module already loaded, unloaded it
+      //to allow it to work all the time
+      serialWrite('import sys \r');
+      serialWrite('sys.modules.pop(\'' + fileS + '\')\r');
+      //Another way of executing a script
+      //ws.send( ==>> exec(open('./cardio.py').read(),globals())
+      serialWrite('import ' + fileS + '\r');
+    }
+    function files_delete(file) {
+      msg = "Are you sure you want to delete " + file + "?";
+      if (confirm(msg)) {
+        txt = "Will delete file " + file;
+        serialWrite('os.remove(\'' + file + '\')\r');
+        setTimeout(updateTable, 350);
+        update_file_status('Deleted  ' + file);
+        listFiles();
+      }
+      else {
+        txt = "Delete aborted";
+        update_file_status('Delete aborted for ' + file);
+      }
+    }
+    function blocksToPython() {
+      var code = Blockly.Python.workspaceToCode(Code.workspace);
+      editor.getDoc().setValue(code);
+    }
+    function files_save_as() {
+      var file = document.getElementById('content_file_name');
+      //For standard textarea
+      //var Textarea = document.getElementById('content_file_code');
+      //var codeStr = Textarea.value;
+      //For codemirror
+      var codeStr = editor.getDoc().getValue("\n")
+      var bufCode = new Uint8Array(codeStr.length);
+      for (var i=0, strLen=codeStr.length; i < strLen; i++) {
+        bufCode[i] = codeStr.charCodeAt(i);
+      }
+      put_file_name = file.value;
+      //put_file_data = bufCode;
+      put_file_data = codeStr;
+      //put_file_data = new Uint8Array(e.target.result);
+      //put_file_data = Textarea.value;
+      put_file();
+    }
+    function updateSourceCode(code, file_name) {
+      //const blb    = new Blob(["Lorem ipsum sit"], {type: "text/plain"});
+      blb = code;
+      const reader = new FileReader();
+      text="";
+      // This fires after the blob has been read/loaded.
+      reader.addEventListener('loadend', (e) => {
+        text = e.srcElement.result;
+        console.log(text);
+        //Works for standard <inpyt type=textarea...
+        var Textarea = document.getElementById('content_file_code');
+        //Works for standard textarea. Commented for codemirror usage
+        //Textarea.value = text;
+        //For codemirror
+        //var editor = CodeMirror.fromTextArea(Textarea);
+        editor.getDoc().setValue(text);
+        var TextareaF = document.getElementById('content_file_name');
+        TextareaF.value = file_name;
+      }
+                             );
+      // Start reading the blob as text.
+      reader.readAsText(blb);
+    }
+    function files_view(file) {
+      str = "Loading " + file;
+      //alert(str);
+      viewOnly=true;
+      get_file2(file);
+      update_file_status('Opening ' + file);
+      str = "Loaded " + file;
+    }
+    function files_download(file) {
+      str = "Download " + file;
+      viewOnly=false;
+      //alert(str);
+      get_file2(file);
+      update_file_status('Downloading ' + file);
+    }
+    function updateTable(evt) {
+      filesA = received_string.split('[')[1];
+      filesB = filesA.split(']')[0];
+      filesC = filesB.split('"'[0]);
+      filesD = eval("[" + filesC + "]");
+      fileTable = "Device File List: <br> <br> <table border=2> ";
+      fileTable += "<tr><td><center>File</center></td><td><center>Actions</center></td><td>Run at boot?</td></tr>";
+      //Build table with files on device and actions
+      for(var i=0, len=filesD.length; i < len; i++){
+        //File name
+        file = filesD[i];
+        fileTable += "<tr><td>" + file + "</td><td>";
+        //Action buttons
+        fileTable += '<input type=button value=Run onclick="files_run(\'' + file + '\'); return false;" />';
+        fileTable += '<input type=button value=Open onclick="files_view(\'' + file + '\'); return false;" />';
+        fileTable += '<input type=button value=Download onclick="files_download(\'' + file + '\'); return false;" />';
+        fileTable += '<input type=button value=Delete onclick="files_delete(\'' + file + '\'); return false;" />';
+        fileTable += "</td><td><center>No</center></td></tr>";
+      }
+      fileTable += "</table>";
+      dom  = document.getElementById("fileList");
+      dom.innerHTML = fileTable;
+    }
+    function listFiles(evt) {
+      /*
 	if (!connected) {
 		alert('Must be connected to list files');
 		return;
 	}
 							      */
-	//alert('See file list in console tab');
-	received_string="";
-        serialWrite('import os\r');
-	sleep(25);
-        serialWrite('os.listdir()\r');
-
-	setTimeout(updateTable, 250);
-
-}
-
-
-
-/*
+      //alert('See file list in console tab');
+      received_string="";
+      serialWrite('\r\x03\x03');
+      sleep(15);
+      serialWrite('import os\r');
+      sleep(15);
+      serialWrite('os.listdir()\r');
+      setTimeout(updateTable, 250);
+    }
+    /*
  * Web Serial API (Google Chrome)
  *
  * Useful information used to this implementation:
@@ -1038,518 +1016,476 @@ function listFiles(evt) {
  * https://dev.to/unjavascripter/the-amazing-powers-of-the-web-web-serial-api-3ilc
  *
  */
-
-const connectButton = document.getElementById ('SerialConnectButton');
-let port;
-
-if ('serial' in navigator) {
-  connectButton.addEventListener('click', function () {
-    if (port) {
-      term.write('\x1b[31mDisconnected from Serial Port\x1b[m\r\n');
-      port.close();
-      port = undefined;
-      connectButton.innerText = 'Connect (Web Serial)';
-      connected=false;
-
-
+    const connectButton = document.getElementById ('SerialConnectButton');
+    let port;
+    if ('serial' in navigator) {
+      connectButton.addEventListener('click', function () {
+        if (port) {
+          term.write('\x1b[31mDisconnected from Serial Port\x1b[m\r\n');
+          port.close();
+          port = undefined;
+          connectButton.innerText = 'Connect (Web Serial)';
+          connected=false;
+        }
+        else {
+          connectButton.innerText = 'Disconnect';
+          getReader();
+        }
+      }
+                                    );
+      connectButton.disabled = false;
     }
     else {
-      connectButton.innerText = 'Disconnect';
-      getReader();
+      const error = document.createElement('p');
+      error.innerHTML = '<p>Support for Serial Web API not enabled. Please enable it using chrome://flags/ and enable Experimental Web Platform fetures</p>';
     }
-  });
-
-  connectButton.disabled = false;
-}
-else {
-  const error = document.createElement('p');
-  error.innerHTML = '<p>Support for Serial Web API not enabled. Please enable it using chrome://flags/ and enable Experimental Web Platform fetures</p>';
-
-}
-
-
-let lineBuffer = '';
-let latestValue = 0;
-
-async function serialWrite(data) {
-	encoder = new TextEncoder();
-	const dataArrayBuffer = encoder.encode(data);
-
-	if (port && port.writable) {
-		const writer = port.writable.getWriter();
-		writer.write(dataArrayBuffer);
-		writer.releaseLock();
-	}
-}
-
-
-async function serialWriteE(data) {
-	encoder = new TextEncoder();
-	const dataArrayBuffer = data;
-
-	if (port && port.writable) {
-		const writer = port.writable.getWriter();
-		writer.write(dataArrayBuffer);
-		writer.releaseLock();
-	}
-}
-
-
-async function getReader() {
-        port = await navigator.serial.requestPort({});
-
-	/*
+    let lineBuffer = '';
+    let latestValue = 0;
+    async function serialWrite(data) {
+      encoder = new TextEncoder();
+      const dataArrayBuffer = encoder.encode(data);
+      if (port && port.writable) {
+        const writer = port.writable.getWriter();
+        writer.write(dataArrayBuffer);
+        writer.releaseLock();
+      }
+    }
+    async function serialWriteE(data) {
+      encoder = new TextEncoder();
+      const dataArrayBuffer = data;
+      if (port && port.writable) {
+        const writer = port.writable.getWriter();
+        writer.write(dataArrayBuffer);
+        writer.releaseLock();
+      }
+    }
+    async function getReader() {
+      port = await navigator.serial.requestPort({
+      }
+                                               );
+      /*
         if (navigator.appVersion.indexOf("Win") != -1)
 		await port.open({ baudRate: 115200 });
         if (navigator.appVersion.indexOf("Linux") != -1)
 		await port.open({ baudRate: 115200 });
 	*/
-
-	//await port.open({ baudrate: 115200 });
-	await port.open({ baudRate: 115200 });
-
-
-        connectButton.innerText = 'Disconnect';
-        term.write('\x1b[31mConnected using Web Serial API !\x1b[m\r\n');
-	connected=true;
-
-        const appendStream = new WritableStream({
-          write(chunk) {
-	    //term.write(chunk);
-	    //console.log('.' + chunk);
-            var dataIn = chunk;
-            //var dataIn = new Uint8Array(chunk);
-	    console.log('binary state = ' + binary_state);
-	    //console.log("chunk = " + dataIn);
-
-
-            switch (binary_state) {
-		    case 91:
-		       binary_state = 92;
-		       received_string2="";
-		       gtCnt=0;
-	            break;
-
-		    case 92:
-			//console.log("len = " + dataIn.length);
-			for (var i = 0; i < dataIn.length; i++) {
-			       console.log(dataIn.charCodeAt(i) + " " + dataIn.charAt(i));
-			       if (dataIn.charAt(i) == '>') {
-				       gtCnt=gtCnt+1;
-			       }
-			       if (gtCnt >=3) {
-				    console.log("GOT gtCnt = " + gtCnt);
-					//binary_state=93;
-
-		       console.log(received_string2);
-			editor.getDoc().setValue(received_string2);
-
-			       }
-			}
-	            break;
-
-	    }
-	    received_string2 = received_string2.concat(chunk);
-
-
-
-            if (chunk instanceof ArrayBuffer) {
-
-
-
-				if (binary_state == 12) {
-                        // final response for put
-                        if (decode_resp(data) == 0) {
-                            update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
-                        } else {
-                            update_file_status('Failed sending ' + put_file_name);
-                        }
-                        binary_state = 0;
-		}
-
-		if (binary_state == 11) {
-                        // first response for put
-                        if (decode_resp(data) == 0) {
-                            // send file data in chunks
-                            for (var offset = 0; offset < put_file_data.length; offset += 1024) {
-                                serialWrite(put_file_data.slice(offset, offset + 1024));
-                            }
-                            binary_state = 12;
-                        }
-
-		}
-
-		if (binary_state == 23) {
-                        // final response
-                        if (decode_resp(data) == 0) {
-                            update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                            if (!viewOnly)
-				saveAs(new Blob([get_file_data], {type: "application/octet-stream"}), get_file_name);
-			    else
-				//updateSourceCode([get_file_data]);
-				updateSourceCode(new Blob([get_file_data], {type: "text/plain"}), get_file_name);
-                        } else {
-                            update_file_status('Failed getting ' + get_file_name);
-                        }
-                        binary_state = 0;
-	}
-		if (binary_state == 23) {
-                        // first (and last) response for GET_VER
-                        console.log('GET_VER', data);
-                        binary_state = 0;
-
-	}
-
-
-		if (binary_state == 22) {
-                        // file data
-                        var sz = data[0] | (data[1] << 8);
-                        if (data.length == 2 + sz) {
-                            // we assume that the data comes in single chunks
-                            if (sz == 0) {
-                                // end of file
-                                binary_state = 23;
-                            } else {
-                                // accumulate incoming data to get_file_data
-                                var new_buf = new Uint8Array(get_file_data.length + sz);
-                                new_buf.set(get_file_data);
-                                new_buf.set(data.slice(2), get_file_data.length);
-                                get_file_data = new_buf;
-                                update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-
-                                var rec = new Uint8Array(1);
-                                rec[0] = 0;
-                                serialWrite(rec);
-                            }
-                        } else {
-                            binary_state = 0;
-                        }
-	}
-
-
-		if (binary_state == 21) {
-                        // first response for get
-                        if (decode_resp(data) == 0) {
-                            binary_state = 22;
-                            var rec = new Uint8Array(1);
-                            rec[0] = 0;
-                            serialWrite(rec);
-                        }
-
-	}
-
-            }
-            //term.write(event.data);
-	term.write(chunk);
-	console.log("Chunk: ----- ");
-	//console.log(chunk);
-	//console.log("----- ");
-	for (var i = 0; i < dataIn.length; i++) {
-		if ((dataIn.charAt(i) == 'B')) 
-		       lineCnt=1;
-		if ((dataIn.charAt(i) == 'I') && lineCnt==1) 
-		       lineCnt=2;
-		if ((dataIn.charAt(i) == 'P') && lineCnt==2) 
-		       lineCnt=3;
-		if ((dataIn.charAt(i) == 'E') && lineCnt==3) 
-		       lineCnt=4;
-		if ((dataIn.charAt(i) == 'S') && lineCnt==4) 
-		       lineCnt=5;
-		if ((dataIn.charAt(i) == '-') && lineCnt==5) 
-		       lineCnt=6;
-		if ((dataIn.charAt(i) == 'P') && lineCnt==6) 
-		       lineCnt=7;
-		if ((dataIn.charAt(i) == 'L') && lineCnt==7) 
-		       lineCnt=8;
-		if ((dataIn.charAt(i) == 'O') && lineCnt==8) 
-		       lineCnt=9;
-		if ((dataIn.charAt(i) == 'T') && lineCnt==9) 
-		       lineCnt=10;
-		if ((dataIn.charAt(i) == ':') && lineCnt==10) 
-		       lineCnt=11;
-		if (lineCnt==12) {
-		       if ((dataIn.charCodeAt(i) == 13)) {
-		       		lineCnt=13;
-		       }
-		        else {
-				lineIn = lineIn + dataIn.charAt(i);
-				//console.log(dataIn.charCodeAt(i) + " " + dataIn.charAt(i));
-		       }
-		}
-		if (lineCnt==13) {
-			console.log("BIPES Plot Packet End");
-		       	console.log(lineIn);
-
-		       	values=lineIn.split(',');
-			bipesAddPoint(parseInt(values[0]));
-			//chart.series[0].addPoint(values[0])
-			//chart.series[1].addPoint(values[1])
-			//chart.series[2].addPoint(values[2])
-
-			lineCnt=0;
-		}
-		if (lineCnt==11) {
-			console.log("BIPES Plot Packet Start");
-		       	lineIn="";
-		       	lineCnt=12;
-		}
-
-		       
-	}
-	
-
-
-	received_string = received_string.concat(chunk);
-
-
-	    //byte by byte...
-	    //alert(event.data);
-	    //received_string = received_string.concat(event.data);
-
-	//////////////////////COPIADO DE CIMA DO WEBSOCKET
-	//////////////////////COPIADO DE CIMA DO WEBSOCKET
-	//////////////////////COPIADO DE CIMA DO WEBSOCKET
-	//////////////////////COPIADO DE CIMA DO WEBSOCKET
+      //await port.open({ baudrate: 115200 });
+      await port.open({
+        baudRate: 115200 }
+                     );
+      connectButton.innerText = 'Disconnect';
+      term.write('\x1b[31mConnected using Web Serial API !\x1b[m\r\n');
+      connected=true;
+      const appendStream = new WritableStream({
+        write(chunk) {
+          //term.write(chunk);
+          //console.log('.' + chunk);
+          var dataIn = chunk;
+          //var dataIn = new Uint8Array(chunk);
+          //console.log('binary state = ' + binary_state);
+          //console.log("chunk = " + dataIn);
+          switch (binary_state) {
+            case 91:
+              binary_state = 92;
+              received_string2="";
+              break;
+            case 92:
+              //console.log("len = " + dataIn.length);
+              break;
           }
-        });
-
-        port.readable
-          .pipeThrough(new TextDecoderStream())
-          .pipeTo(appendStream);
-
-
-	term.on('data', function(data) {
-            serialWrite(data);
-        });
-
-	setTimeout(sendSerialHello, 500);
-
+          received_string2 = received_string2.concat(chunk);
+          if (waitingFile == 1) {
+            setTimeout(() => {
+              console.log('Updating !')
+              waitingFile=0;
+              var received_string2b = received_string2.split("\n...")[8];
+              var received_string2c = received_string2b.split("\n>>>")[0];
+              //editor.getDoc().setValue(received_string2c);
+              if (!viewOnly)
+                saveAs(new Blob([received_string2c], {
+                  type: "application/octet-stream"}
+                               ), get_file_name);
+              else
+                //updateSourceCode([get_file_data]);
+                updateSourceCode(new Blob([received_string2c], {
+                  type: "text/plain"}
+                                         ), get_file_name);
+            }
+                       , 1200);
+          }
+          if (chunk instanceof ArrayBuffer) {
+            if (binary_state == 12) {
+              // final response for put
+              if (decode_resp(data) == 0) {
+                update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
+              }
+              else {
+                update_file_status('Failed sending ' + put_file_name);
+              }
+              binary_state = 0;
+            }
+            if (binary_state == 11) {
+              // first response for put
+              if (decode_resp(data) == 0) {
+                // send file data in chunks
+                for (var offset = 0; offset < put_file_data.length; offset += 1024) {
+                  serialWrite(put_file_data.slice(offset, offset + 1024));
+                }
+                binary_state = 12;
+              }
+            }
+            if (binary_state == 23) {
+              // final response
+              if (decode_resp(data) == 0) {
+                update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
+                if (!viewOnly)
+                  saveAs(new Blob([get_file_data], {
+                    type: "application/octet-stream"}
+                                 ), get_file_name);
+                else
+                  //updateSourceCode([get_file_data]);
+                  updateSourceCode(new Blob([get_file_data], {
+                    type: "text/plain"}
+                                           ), get_file_name);
+              }
+              else {
+                update_file_status('Failed getting ' + get_file_name);
+              }
+              binary_state = 0;
+            }
+            if (binary_state == 23) {
+              // first (and last) response for GET_VER
+              console.log('GET_VER', data);
+              binary_state = 0;
+            }
+            if (binary_state == 22) {
+              // file data
+              var sz = data[0] | (data[1] << 8);
+              if (data.length == 2 + sz) {
+                // we assume that the data comes in single chunks
+                if (sz == 0) {
+                  // end of file
+                  binary_state = 23;
+                }
+                else {
+                  // accumulate incoming data to get_file_data
+                  var new_buf = new Uint8Array(get_file_data.length + sz);
+                  new_buf.set(get_file_data);
+                  new_buf.set(data.slice(2), get_file_data.length);
+                  get_file_data = new_buf;
+                  update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
+                  var rec = new Uint8Array(1);
+                  rec[0] = 0;
+                  serialWrite(rec);
+                }
+              }
+              else {
+                binary_state = 0;
+              }
+            }
+            if (binary_state == 21) {
+              // first response for get
+              if (decode_resp(data) == 0) {
+                binary_state = 22;
+                var rec = new Uint8Array(1);
+                rec[0] = 0;
+                serialWrite(rec);
+              }
+            }
+          }
+          //term.write(event.data);
+          term.write(chunk);
+          //console.log("Chunk: ----- ");
+          //console.log(chunk);
+          //console.log("----- ");
+          for (var i = 0; i < dataIn.length; i++) {
+            if ((dataIn.charAt(i) == 'B')) 
+              lineCnt=1;
+            if ((dataIn.charAt(i) == 'I') && lineCnt==1) 
+              lineCnt=2;
+            if ((dataIn.charAt(i) == 'P') && lineCnt==2) 
+              lineCnt=3;
+            if ((dataIn.charAt(i) == 'E') && lineCnt==3) 
+              lineCnt=4;
+            if ((dataIn.charAt(i) == 'S') && lineCnt==4) 
+              lineCnt=5;
+            if ((dataIn.charAt(i) == '-') && lineCnt==5) 
+              lineCnt=6;
+            if ((dataIn.charAt(i) == 'P') && lineCnt==6) 
+              lineCnt=7;
+            if ((dataIn.charAt(i) == 'L') && lineCnt==7) 
+              lineCnt=8;
+            if ((dataIn.charAt(i) == 'O') && lineCnt==8) 
+              lineCnt=9;
+            if ((dataIn.charAt(i) == 'T') && lineCnt==9) 
+              lineCnt=10;
+            if ((dataIn.charAt(i) == ':') && lineCnt==10) 
+              lineCnt=11;
+            if (lineCnt==12) {
+              if ((dataIn.charCodeAt(i) == 13)) {
+                lineCnt=13;
+              }
+              else {
+                lineIn = lineIn + dataIn.charAt(i);
+                //console.log(dataIn.charCodeAt(i) + " " + dataIn.charAt(i));
+              }
+            }
+            if (lineCnt==13) {
+              console.log("BIPES Plot Packet End");
+              console.log(lineIn);
+              values=lineIn.split(',');
+              bipesAddPoint(parseInt(values[0]));
+              //chart.series[0].addPoint(values[0])
+              //chart.series[1].addPoint(values[1])
+              //chart.series[2].addPoint(values[2])
+              lineCnt=0;
+            }
+            if (lineCnt==11) {
+              console.log("BIPES Plot Packet Start");
+              lineIn="";
+              lineCnt=12;
+            }
+          }
+          received_string = received_string.concat(chunk);
+          //byte by byte...
+          //alert(event.data);
+          //received_string = received_string.concat(event.data);
+          //////////////////////COPIADO DE CIMA DO WEBSOCKET
+          //////////////////////COPIADO DE CIMA DO WEBSOCKET
+          //////////////////////COPIADO DE CIMA DO WEBSOCKET
+          //////////////////////COPIADO DE CIMA DO WEBSOCKET
+        }
       }
-
-      function sendSerialHello() {
-	//serialWrite("\nmachine.soft_reset()\n\n");
-	serialWrite('\x03');
-	serialWrite('\x03');
-	}
-
-
-</script>
-
-
-
-<!--
-	Start of modal Splash Screen
+                                             );
+      port.readable
+        .pipeThrough(new TextDecoderStream())
+        .pipeTo(appendStream);
+      term.on('data', function(data) {
+        serialWrite(data);
+      }
+             );
+      setTimeout(sendSerialHello, 500);
+    }
+    function sendSerialHello() {
+      //serialWrite("\nmachine.soft_reset()\n\n");
+      serialWrite('\x03');
+      serialWrite('\x03');
+    }
+  </script>
+  <!--
+Start of modal Splash Screen
 -->
-
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-
-/* The Modal (background) */
-.modal {
-display: none; /* Hidden by default */
-position: fixed; /* Stay in place */
-z-index: 1000000; /* Sit on top - amazing, but Blockly has z-index up to 100000*/
-padding-top: 100px; /* Location of the box */
-left: 0;
-top: 0;
-width: 100%; /* Full width */
-height: 100%; /* Full height */
-overflow: auto; /* Enable scroll if needed */
-background-color: rgb(0,0,0); /* Fallback color */
-background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-position: relative;
-background-color: #fefefe;
-margin: auto;
-padding: 0;
-border: 1px solid #188;
-width: 80%;
-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
--webkit-animation-name: animatetop;
--webkit-animation-duration: 0.4s;
-animation-name: animatetop;
-animation-duration: 0.4s
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-	  from {top:-300px; opacity:0} 
-	    to {top:0; opacity:1}
-}
-
-@keyframes animatetop {
-	  from {top:-300px; opacity:0}
-	    to {top:0; opacity:1}
-}
-
-/* The Close Button */
-.closeM {
-color: white;
-float: right;
-font-size: 28px;
-font-weight: bold;
-}
-
-.closeM:hover,
-.closeM:focus {
-color: #000;
-text-decoration: none;
-cursor: pointer;
-}
-
-.modal-header {
-padding: 2px 16px;
-background-color: #4d4dff;
-color: white;
-}
-
-.modal-body {padding: 2px 16px;}
-
-.modal-footer {
-padding: 2px 16px;
-background-color: #4d4dff;
-color: white;
-}
-</style>
-
-
-<!-- Trigger/Open The Modal 
-	For testing only
-
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    /* The Modal (background) */
+    .modal {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Stay in place */
+      z-index: 1000000;
+      /* Sit on top - amazing, but Blockly has z-index up to 100000*/
+      padding-top: 100px;
+      /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow: auto;
+      /* Enable scroll if needed */
+      background-color: rgb(0,0,0);
+      /* Fallback color */
+      background-color: rgba(0,0,0,0.4);
+      /* Black w/ opacity */
+    }
+    /* Modal Content */
+    .modal-content {
+      position: relative;
+      background-color: #fefefe;
+      margin: auto;
+      padding: 0;
+      border: 1px solid #188;
+      width: 80%;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+      -webkit-animation-name: animatetop;
+      -webkit-animation-duration: 0.4s;
+      animation-name: animatetop;
+      animation-duration: 0.4s
+    }
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+      from {
+        top:-300px;
+        opacity:0}
+      to {
+        top:0;
+        opacity:1}
+    }
+    @keyframes animatetop {
+      from {
+        top:-300px;
+        opacity:0}
+      to {
+        top:0;
+        opacity:1}
+    }
+    /* The Close Button */
+    .closeM {
+      color: white;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .closeM:hover,
+    .closeM:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .modal-header {
+      padding: 2px 16px;
+      background-color: #4d4dff;
+      color: white;
+    }
+    .modal-body {
+      padding: 2px 16px;
+    }
+    .modal-footer {
+      padding: 2px 16px;
+      background-color: #4d4dff;
+      color: white;
+    }
+  </style>
+  <!-- Trigger/Open The Modal 
+For testing only
 <body onload="loadPage()">
 <button id="myBtn">Open Modal SplashScreen</button>
-
 BIPES
 -->
-
-		<!-- The Modal -->
-		<div id="myModal" class="modal">
-
-			  <!-- Modal content -->
-			    <div class="modal-content">
-				        <div class="modal-header">
-						      <span class="closeM">&times;</span>
-						            <h2>Welcome do BIPES!</h2>
-							        </div>
-								    <div class="modal-body">
-
-									    <p><b>BIPES: Block based Integrated Platform for Embedded Systems</b> allows text and block based programming for several types of embedded systems and Internet of Things modules using MicroPython, CircuitPython or Python. You can connect, program, debug a monitor several types of boards using network or USB. Please check a list of <a href=https://bipes.net.br/wp/boards/>compatible boards here</a>. Compatible boards include STM32, ESP32, ESP8266 and Raspberry Pi Pico.</p>
-									    <p><b>BIPES</b> is fully <a href=https://bipes.net.br/wp/development/>open source</a> and based on HTML and JavaScript, so no software install or configuration is needed and you can use it offline! We hope BIPES is useful for you and that you can enjoy using BIPES. If you need help, we now have a <a href=https://bipes.net.br/wp/forums/>discussion forum</a>. Feel free to use it! Also, if we invite you to use the forum to leave feedbacks and suggestions for BIPES!</p>
-									    <p>Thank you from the BIPES Team!</p>
-									    <p><b>News:</b>
-									    <br>
-									    jul-09-2021: BIPES IoT dashboard with freeboard available on IOT Tab <br> 
-									    jul-05-2021: Board model is now stored and automatically set when programs are shared <br> 
-									    <br>
-											    </div>
-											        <div class="modal-footer">
-													      
-													<br>
-													<center>
-														<input type="checkbox" name="checkfield" id="g01-01"  onchange="doalert(this)"/>
-														Do not show this screen again
-														<br>
-														<br>
-														<button onclick="closeModal()">Close</button>
-
-													<br>
-													<br>
-													          </div>
-														    </div>
-
-		</div>
-
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="closeM">&times;
+        </span>
+        <h2>Welcome do BIPES!
+        </h2>
+      </div>
+      <div class="modal-body">
+        <p>
+          <b>BIPES: Block based Integrated Platform for Embedded Systems
+          </b> allows text and block based programming for several types of embedded systems and Internet of Things modules using MicroPython, CircuitPython or Python. You can connect, program, debug a monitor several types of boards using network or USB. Please check a list of 
+          <a href=https://bipes.net.br/wp/boards/>compatible boards here
+        </a>. Compatible boards include STM32, ESP32, ESP8266 and Raspberry Pi Pico.
+      </p>
+    <p>
+      <b>BIPES
+      </b> is fully 
+      <a href=https://bipes.net.br/wp/development/>open source
+    </a> and based on HTML and JavaScript, so no software install or configuration is needed and you can use it offline! We hope BIPES is useful for you and that you can enjoy using BIPES. If you need help, we now have a 
+  <a href=https://bipes.net.br/wp/forums/>discussion forum
+  </a>. Feel free to use it! Also, if we invite you to use the forum to leave feedbacks and suggestions for BIPES!
+</p>
+<p>Thank you from the BIPES Team!
+</p>
+<p>
+  <b>News:
+  </b>
+  <br>
+  jul-09-2021: BIPES IoT dashboard with freeboard available on IOT Tab 
+  <br> 
+  jul-05-2021: Board model is now stored and automatically set when programs are shared 
+  <br> 
+  <br>
+</div>
+<div class="modal-footer">
+  <br>
+  <center>
+    <input type="checkbox" name="checkfield" id="g01-01"  onchange="doalert(this)"/>
+    Do not show this screen again
+    <br>
+    <br>
+    <button onclick="closeModal()">Close
+    </button>
+    <br>
+    <br>
+    </div>
+</div>
+</div>
 <script>
-		// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-//var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("closeM")[0];
-
-// When the user clicks the button, open the modal 
-//btn.onclick = function() {
-//	  modal.style.display = "block";
-//}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-	  modal.style.display = "none";
-}
-
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-	  if (event.target == modal) {
-		      modal.style.display = "none";
-		    }
-}
-
-function closeModal() {
-	  modal.style.display = "none";
-}
-
-function loadPage() {
-	var x = getCookieModal('BIPES_Splash');
-	if (x) {
-		console.log('Not showing splash');
-	} else {
-		console.log('Showing splash');
-		modal.style.display = "block";
-	}
-}
-
-function doalert(checkboxElem) {
-
-	if (checkboxElem.checked) {
-		setCookieModal('BIPES_Splash','BIPES_SplashC',1);
-		console.log('Modal Cookie Set');
-	} else {
-		eraseCookieModal('BIPES_Splash');
-		console.log('Modal Cookie deleted');
-	}
-}
-
-
-function setCookieModal(name,value,days) {
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  // Get the button that opens the modal
+  //var btn = document.getElementById("myBtn");
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("closeM")[0];
+  // When the user clicks the button, open the modal 
+  //btn.onclick = function() {
+  //	  modal.style.display = "block";
+  //}
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  function closeModal() {
+    modal.style.display = "none";
+  }
+  function loadPage() {
+    var x = getCookieModal('BIPES_Splash');
+    if (x) {
+      console.log('Not showing splash');
+    }
+    else {
+      console.log('Showing splash');
+      modal.style.display = "block";
+    }
+  }
+  function doalert(checkboxElem) {
+    if (checkboxElem.checked) {
+      setCookieModal('BIPES_Splash','BIPES_SplashC',1);
+      console.log('Modal Cookie Set');
+    }
+    else {
+      eraseCookieModal('BIPES_Splash');
+      console.log('Modal Cookie deleted');
+    }
+  }
+  function setCookieModal(name,value,days) {
     var expires = "";
     if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
     }
     document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-
-function getCookieModal(name) {
+  }
+  function getCookieModal(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
     }
     return null;
-}
-
-function eraseCookieModal(name) {   
+  }
+  function eraseCookieModal(name) {
     document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-
+  }
 </script>
-
-
-
 <!--
-	End of modal Splash Screen
+End of modal Splash Screen
 -->
-
-
-
-
 </html>
+
