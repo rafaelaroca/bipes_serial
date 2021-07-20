@@ -9895,7 +9895,7 @@ Blockly.Blocks['neopixel_init'] = {
   init: function() {
     this.setColour(135);
     this.appendDummyInput()
-        .appendField("Init neopixel");
+        .appendField("Init NeoPixel");
 
  this.appendDummyInput()
       .appendField(new Blockly.FieldImage(
@@ -9919,10 +9919,10 @@ Blockly.Blocks['neopixel_init'] = {
 };
 
 
-Blockly.Blocks['neopixel_write'] = {
+Blockly.Blocks['neopixel_control'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable("NeoPixel Control"), "MSG_NEOPIXEL");
+        .appendField(new Blockly.FieldLabel("Control NeoPixel"), "MSG_NEOPIXEL");
 
     this.appendValueInput("address")
         .setCheck(null)
@@ -9936,8 +9936,23 @@ Blockly.Blocks['neopixel_write'] = {
     this.setNextStatement(true);
 
     this.setColour(230);
- this.setTooltip("Acceleration on X axis");
+ this.setTooltip("Set NeoPixel");
  this.setHelpUrl("http://www.bipes.net.br");
+  }
+};
+
+
+Blockly.Blocks['neopixel_write'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldLabel("Write NeoPixel"), "MSG_NEOPIXEL");
+
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+
+    this.setColour(230);
+    this.setTooltip("Write NeoPixel");
+    this.setHelpUrl("http://www.bipes.net.br");
   }
 };
 

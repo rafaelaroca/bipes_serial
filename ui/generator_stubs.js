@@ -5118,15 +5118,19 @@ Blockly.Python['neopixel_init'] = function(block) {
   return code;
 };
 
-Blockly.Python['neopixel_write'] = function(block) {
+Blockly.Python['neopixel_control'] = function(block) {
   var value_address = Blockly.Python.valueToCode(block, 'address', Blockly.Python.ORDER_ATOMIC);
   var value_color = Blockly.Python.valueToCode(block, 'color', Blockly.Python.ORDER_ATOMIC);
 
-  var code = 'np[' + value_address + ']=' + value_color + '\n' + 'np.write()\n';
+  var code = 'np[' + value_address + ']=' + value_color + '\n';
 
   return code;
 };
 
+Blockly.Python['neopixel_write'] = function(block) {
+  var code = 'np.write()\n';
+  return code;
+};
 
 Blockly.Python['bipes_plot'] = function(block) {
   var value_values = Blockly.Python.valueToCode(block, 'values', Blockly.Python.ORDER_ATOMIC);
@@ -5136,5 +5140,4 @@ Blockly.Python['bipes_plot'] = function(block) {
 
   return code;
 };
-
 
