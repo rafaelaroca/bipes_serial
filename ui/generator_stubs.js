@@ -31,26 +31,26 @@ Blockly.Python['reset'] = function(block) {
 Blockly.Python["reset_cause_soft"] = function(block) {
 	Blockly.Python.definitions_['import_machine'] = 'import machine';
 	var code = "machine.SOFT_RESET"; 
-	return [code, Blockly.JavaScript.ORDER_NONE];
+	return [code, Blockly.Python.ORDER_NONE];
 };
 
 
 Blockly.Python["reset_cause_hard"] = function(block) {
 	Blockly.Python.definitions_['import_machine'] = 'import machine';
 	var code = "machine.HARD_RESET"; 
-	return [code, Blockly.JavaScript.ORDER_NONE];
+	return [code, Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python["reset_cause_wdt"] = function(block) {
 	Blockly.Python.definitions_['import_machine'] = 'import machine';
 	var code = "machine.WDT_RESET"; 
-	return [code, Blockly.JavaScript.ORDER_NONE];
+	return [code, Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python["reset_cause_deep"] = function(block) {
 	Blockly.Python.definitions_['import_machine'] = 'import machine';
 	var code = "machine.DEEPSLEEP_RESET"; 
-	return [code, Blockly.JavaScript.ORDER_NONE];
+	return [code, Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python['webrepl_start'] = function(block) {
@@ -5072,13 +5072,13 @@ Blockly.Python['python_try_catch'] = function(block) {
 
 
 Blockly.Python['neopixel_color_numbers'] = function(block) {
-  var value_red = Blockly.JavaScript.valueToCode(block, 'red', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_green = Blockly.JavaScript.valueToCode(block, 'green', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_blue = Blockly.JavaScript.valueToCode(block, 'blue', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_red = Blockly.Python.valueToCode(block, 'red', Blockly.Python.ORDER_ATOMIC);
+  var value_green = Blockly.Python.valueToCode(block, 'green', Blockly.Python.ORDER_ATOMIC);
+  var value_blue = Blockly.Python.valueToCode(block, 'blue', Blockly.Python.ORDER_ATOMIC);
 
   var code = '(' + value_red + ',' + value_green + ',' + value_blue + ')';
 
-  return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.Python.ORDER_NONE];
 };
 
 
@@ -5101,7 +5101,7 @@ Blockly.Python['neopixel_color_colors'] = function(block) {
   var color = block.getFieldValue('color');
   var h = hexToRgb(color);
   var code = '(' + h.r + ',' + h.g + ',' + h.b + ')';
-  return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.Python.ORDER_NONE];
 };
 
 
