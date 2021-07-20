@@ -201,10 +201,13 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     <tr height="25%" id="termTR">
       <td>
         <form>
+		<!--
           <input type="text" name="webrepl_url" id="url" value="ws://192.168.0.16:8266/" disabled />
           <input type="submit" id="button" value="Connect" disabled onclick="button_click(); return false;" />
+		-->
           <button id="SerialConnectButton" type="button" disabled>Connect (Web Serial)
           </button>
+	  <input type="checkbox" id="resetBoard" value="off">Reset board on connect
         </form>
         <div style="display:inline-block; vertical-align:top; ">
           <div id="term">
@@ -291,9 +294,6 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
   <div id="content_files" class="content">
     <div style="width: 50%; float:left">
       <center>
-        <font color=red>Important:
-        </font> this tab features are fully functional in the network version, but in development in the USB/Serial (beta2serial) BIPES version.
-        <br>
         Text editor for files in device's filesystem:
       </center>
       <br>
@@ -373,7 +373,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     </div>
     </body>
   <script>
-    ;
+    
     var term;
     var ws;
     var connected = false;
@@ -394,6 +394,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     var lineIn = "";
     var linesIn = "";
     var lineCnt=0;
+
     function calculate_size(win) {
       //    var cols = Math.max(80, Math.min(150, (win.innerWidth - 280) / 7)) | 0;
       //   var rows = Math.max(5, Math.min(80, (win.innerHeight - 250) / 12)) | 0;
@@ -489,6 +490,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
         term.element.focus();
         term.write('\x1b[31mWelcome to BIPES Project using MicroPython!\x1b[m\r\n');
         ws.onmessage = function(event) {
+		/*
           if (event.data instanceof ArrayBuffer) {
             var data = new Uint8Array(event.data);
             switch (binary_state) {
@@ -575,6 +577,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
                 break;
             }
           }
+		*/
           term.write(event.data);
           //byte by byte...
           //alert(event.data);
@@ -612,10 +615,84 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       //        .replace(/>/g, '\\x3E');
     }
     function put_fileBox() {
-	put_file();
 	fileBox=1;
+	put_file();
     }
-    function put_file() {
+
+    async function put_file() {
+      var dest_fname = put_file_name;
+      var dest_fsize = put_file_data.length;
+
+      console.log("Name: " + put_file_name);
+      console.log("Data: " + put_file_data);
+
+      update_file_status('Sending file (USB) ' + put_file_name + '...');
+
+      //ctrl-C twice: interrupt any running program
+      serialWrite('\r\x03\x03');
+      await asleep(10);
+
+      serialWrite("import struct\r");
+      serialWrite("f=open('" + put_file_name + "', 'wb')\r");
+
+      for (var i=0, strLen=put_file_data.length; i < strLen; i++) {
+        var tc = put_file_data[i].charCodeAt(0);
+	//console.log('char = ' + tc);
+        update_file_status('Sent ' + i + '/' + strLen + ' bytes');
+	cmdF="f.write(struct.pack(\"B\"," + tc + "))\r";
+        serialWrite(cmdF);
+        await asleep(25);
+      }
+
+      serialWrite("f.close()\r");
+      await asleep(25);
+      serialWrite('\r');
+      serialWrite('\r');
+      serialWrite('\r');
+      await asleep(10);
+      update_file_status('File ' + put_file_name + ' sent.');
+      fileBox=0;
+    }
+
+
+
+    async function put_fileRaw() {
+      var dest_fname = put_file_name;
+      var dest_fsize = put_file_data.length;
+
+      console.log("Name: " + put_file_name);
+      console.log("Data: " + put_file_data);
+
+      update_file_status('Sending raw (USB) ' + put_file_name + '...');
+
+      //ctrl-C twice: interrupt any running program
+      serialWrite('\r\x03\x03');
+      await asleep(10);
+
+      serialWrite("import struct\r");
+      serialWrite("f=open('" + put_file_name + "', 'wb')\r");
+
+      for (var i=0, strLen=put_file_data.length; i < strLen; i++) {
+        var tc = put_file_data[i];
+	//console.log('char = ' + tc);
+        update_file_status('Sent ' + i + '/' + strLen + ' bytes');
+	cmdF="f.write(struct.pack(\"B\"," + tc + "))\r";
+        serialWrite(cmdF);
+        await asleep(25);
+      }
+
+      serialWrite("f.close()\r");
+      await asleep(25);
+      serialWrite('\r');
+      serialWrite('\r');
+      serialWrite('\r');
+      await asleep(10);
+      update_file_status('File ' + put_file_name + ' sent.');
+      fileBox=0;
+    }
+
+    async function put_file_old() {
+    //function put_file() {
       var dest_fname = put_file_name;
       var dest_fsize = put_file_data.length;
       console.log("Name: " + put_file_name);
@@ -623,7 +700,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       update_file_status('Sending (USB) ' + put_file_name + '...');
       //ctrl-C twice: interrupt any running program
       serialWrite('\r\x03\x03');
-      sleep(10);
+      await asleep(10);
       serialWrite("f=open('" + put_file_name + "', 'wb')\r");
       var arr = put_file_data.split("\n");
       for (var i = 0; i < arr.length; i++)
@@ -638,7 +715,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
 		cmdF="f.write(b'" + cmde2 + '\\n' + "')\r";
         console.log("Sending: " + cmdF);
         serialWrite(cmdF);
-        sleep(5);
+        await asleep(25);
       }
       serialWrite("f.close()\r");
       //write(3, “f = open(‘test.txt’, ‘wb’)”, 26) = 26
@@ -658,19 +735,20 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       serialWrite('\r');
       serialWrite('\r');
       //serialWrite('\x04');
-      //sleep(10);
+      await asleep(10);
       //serialWrite('\r\x02'); //Send CTRL+B
       update_file_status('File ' + put_file_name + ' sent.');
       fileBox=0;
     }
-    function get_file2(src_fname) {
+
+    async function get_file2(src_fname) {
       // initiate get
       binary_state = 91;
       get_file_name = src_fname;
       update_file_status('Getting ' + get_file_name + '...');
       //ctrl-C twice: interrupt any running program
       serialWrite('\r\x03\x03');
-      sleep(10);
+      await asleep(10);
       //serialWrite('\r\x01') // ctrl-A: enter raw REPL
       //sleep(10);
       //serialWrite('\x04');
@@ -680,9 +758,9 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       //serialWrite('\x03');
       //sleep(10);
       serialWrite("\rimport sys\r");
-      sleep(10);
+      await asleep(10);
       serialWrite("with open('" + get_file_name + "', 'rb') as infile:\rwhile True:\rresult = infile.read(32)\rif result == b'':\rbreak\r\blen = sys.stdout.write(result)\r");
-      sleep(10);
+      await asleep(10);
       received_string="";
       received_string2="";
       waitingFile=1;
@@ -690,7 +768,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       serialWrite('\r');
       serialWrite('\r');
       //serialWrite('\x04');
-      sleep(10);
+      await asleep(200);
       //serialWrite('\r\x02'); //Send CTRL+B
       var TextareaF = document.getElementById('content_file_name');
       TextareaF.value = get_file_name;
@@ -768,6 +846,13 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
                                                                 , false);
     document.getElementById('put-file-select').addEventListener('change', handle_put_file_select, false);
     document.getElementById('put-file-button').disabled = true;
+
+    //New async sleep function, callend with async await(), which allows UI updates
+    const asleep = (milliseconds) => {
+	return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
+    //Original sleep function, which blocks UI and all the tab while sleeps
     function sleep(milliseconds) {
       const date = Date.now();
       let currentDate = null;
@@ -776,6 +861,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       }
       while (currentDate - date < milliseconds);
     }
+
     function stopPython(evt) {
       //Send Ctrl+C to stop program
       //ws.send('\x03');
@@ -835,7 +921,8 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       }
                         );
     }
-    function runPythonCode(pCodeIn) {
+    async function runPythonCode(pCodeIn) {
+    //function runPythonCode(pCodeIn) {
       /*
         if (!connected) {
                 alert('Must be connected to run code');
@@ -846,15 +933,17 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       var textArray = code.split(/\r\n|\r|\n/);
       console.log(code);
       ws.send('\x05');
-      sleep(10);
-      textArray.forEach(function(line, index, array) {
+      await asleep(20);
+      textArray.forEach(async function(line, index, array) {
         ws.send(line+'\r');
-        sleep(15);
+        await asleep(50);
       }
                        );
       ws.send('\x04');
     }
-    function runPython(evt) {
+
+    async function runPython(evt) {
+    //function runPython(evt) {
       var devSel = document.getElementById("device_selector").value;
       if (devSel == "UNO") {
         alert("Generating code for Arduino Uno");
@@ -872,11 +961,11 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       console.log(code);
       //ws.send('\x05');
       serialWrite('\x05');
-      sleep(50);
-      textArray.forEach(function(line, index, array) {
+      await asleep(20);
+      textArray.forEach(async function(line, index, array) {
         //ws.send(line+'\r');
         serialWrite(line+'\r');
-        sleep(25);
+        await asleep(50);
       }
                        );
       //ws.send('\x04');
@@ -913,6 +1002,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       var code = Blockly.Python.workspaceToCode(Code.workspace);
       editor.getDoc().setValue(code);
     }
+
     function files_save_as() {
       var file = document.getElementById('content_file_name');
       //For standard textarea
@@ -925,12 +1015,13 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
         bufCode[i] = codeStr.charCodeAt(i);
       }
       put_file_name = file.value;
-      //put_file_data = bufCode;
-      put_file_data = codeStr;
+      put_file_data = bufCode;
+      //put_file_data = codeStr;
       //put_file_data = new Uint8Array(e.target.result);
       //put_file_data = Textarea.value;
-      put_file();
+      put_fileRaw();
     }
+
     function updateSourceCode(code, file_name) {
       //const blb    = new Blob(["Lorem ipsum sit"], {type: "text/plain"});
       blb = code;
@@ -992,7 +1083,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       dom  = document.getElementById("fileList");
       dom.innerHTML = fileTable;
     }
-    function listFiles(evt) {
+    async function listFiles(evt) {
       /*
 	if (!connected) {
 		alert('Must be connected to list files');
@@ -1002,10 +1093,19 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       //alert('See file list in console tab');
       received_string="";
       serialWrite('\r\x03\x03');
-      sleep(15);
+      await asleep(15);
+
+      //Get Free space
+      serialWrite('import uos\r');
+      await asleep(15);
+      serialWrite('uos.statvfs(\'/\')\r');
+      //TODO: show free space
+
+      //Get file list
       serialWrite('import os\r');
-      sleep(15);
+      await asleep(15);
       serialWrite('os.listdir()\r');
+      await asleep(15);
       setTimeout(updateTable, 250);
     }
     /*
@@ -1041,7 +1141,8 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     }
     let lineBuffer = '';
     let latestValue = 0;
-    async function serialWrite(data) {
+    //async function serialWrite(data) {
+    function serialWrite(data) {
       encoder = new TextEncoder();
       const dataArrayBuffer = encoder.encode(data);
       if (port && port.writable) {
@@ -1076,6 +1177,8 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       connectButton.innerText = 'Disconnect';
       term.write('\x1b[31mConnected using Web Serial API !\x1b[m\r\n');
       connected=true;
+
+
       const appendStream = new WritableStream({
         write(chunk) {
           //term.write(chunk);
@@ -1113,6 +1216,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
             }
                        , 1200);
           }
+		/*
           if (chunk instanceof ArrayBuffer) {
             if (binary_state == 12) {
               // final response for put
@@ -1193,6 +1297,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
               }
             }
           }
+	      */
           //term.write(event.data);
           term.write(chunk);
           //console.log("Chunk: ----- ");
@@ -1267,9 +1372,15 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       setTimeout(sendSerialHello, 500);
     }
     function sendSerialHello() {
-      //serialWrite("\nmachine.soft_reset()\n\n");
-      serialWrite('\x03');
-      serialWrite('\x03');
+
+      var chkReset = document.getElementById("resetBoard");
+      if (chkReset.checked) {
+	      term.write('\x1b[31mResetting the board...\x1b[m\r\n');
+	      serialWrite("\rmachine.soft_reset()\r\r");
+	      serialWrite('\x03');
+	      serialWrite('\x03');
+      }
+      serialWrite("\r\r");
     }
   </script>
   <!--
