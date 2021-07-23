@@ -140,7 +140,6 @@ Blockly.Blocks['ticks_diff'] = {
   }
 };
 
-
 Blockly.Blocks['esp32_set_rtc'] = {
   init: function() {
    this.appendDummyInput().appendField(new Blockly.FieldLabelSerializable("Set RTC Value (ESP32)"), "SET_RTC");
@@ -223,7 +222,6 @@ Blockly.Blocks['esp8266_set_rtc'] = {
  this.setHelpUrl("bipes.net.br");
   }
 };
-
 
 Blockly.Blocks['esp32_get_rtc'] = {
   init: function() {
@@ -10085,7 +10083,7 @@ Blockly.Blocks['st7789_pixel'] = {
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Y position");
-    this.appendValueInput("c")
+    this.appendValueInput("color")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Color");
@@ -10122,7 +10120,7 @@ Blockly.Blocks['st7789_line'] = {
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Y1 position");
 
-    this.appendValueInput("c")
+    this.appendValueInput("color")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Color");
