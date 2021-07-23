@@ -583,7 +583,8 @@
 
     <category name="ST7789 Display">
       <label text="ST7789 Display"></label>
-      <button text="Install ST7789 library" callbackKey="installPyLib"></button>
+      <label text="Library: https://github.com/devbis/st7789py_mpy"></label>
+      <button text="Install st7789py library" callbackKey="installPyLib"></button>
 
       <block type="st7789_init">
         <value name="i2c">
