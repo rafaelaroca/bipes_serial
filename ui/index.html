@@ -389,6 +389,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     var fileBox=0;
     var lastChar='';
     var waitingFile=0;
+    var waitingFileSize=0;
     var viewOnly = false;
     //Received lines on the serial buffer
     var lineIn = "";
@@ -746,9 +747,19 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       binary_state = 91;
       get_file_name = src_fname;
       update_file_status('Getting ' + get_file_name + '...');
+
       //ctrl-C twice: interrupt any running program
       serialWrite('\r\x03\x03');
       await asleep(10);
+
+      received_string2="";
+      waitingFileSize=1;
+      serialWrite('import uos\ruos.stat(\'' + get_file_name + '\')\n');
+      //Wait for the size
+
+      await asleep(10);
+
+
       //serialWrite('\r\x01') // ctrl-A: enter raw REPL
       //sleep(10);
       //serialWrite('\x04');
@@ -930,6 +941,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
         }
 	*/
       var code = pCodeIn;
+      code+="#End of BIPES generated code";
       var textArray = code.split(/\r\n|\r|\n/);
       console.log(code);
       ws.send('\x05');
@@ -957,6 +969,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
 	}
 	*/
       var code = Blockly.Python.workspaceToCode(Code.workspace);
+      code+="#End of BIPES generated code";
       var textArray = code.split(/\r\n|\r|\n/);
       console.log(code);
       //ws.send('\x05');
@@ -1000,6 +1013,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     }
     function blocksToPython() {
       var code = Blockly.Python.workspaceToCode(Code.workspace);
+      code+="#End of BIPES generated code";
       editor.getDoc().setValue(code);
     }
 
@@ -1197,6 +1211,11 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
               break;
           }
           received_string2 = received_string2.concat(chunk);
+
+          if (waitingFileSize == 1) {
+		  waitingFileSize=0;
+	  }
+
           if (waitingFile == 1) {
             setTimeout(() => {
               console.log('Updating !')

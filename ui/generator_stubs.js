@@ -400,7 +400,7 @@ Blockly.Python['net_ifconfig'] = function(block) {
   Blockly.Python.definitions_['import_network_a'] = 'sta_if = network.WLAN(network.STA_IF)';
   Blockly.Python.definitions_['import_network_b'] = 'sta_if.active(True)';
 
-  var code = 'sta_if.ifconfig()\n';
+  var code = 'sta_if.ifconfig()';
   return [code, Blockly.Python.ORDER_NONE];
 };
 
@@ -5141,3 +5141,62 @@ Blockly.Python['bipes_plot'] = function(block) {
   return code;
 };
 
+//REPL over Web Bluetooth
+Blockly.Python['bluetooth_repl_start'] = function(block) {
+  Blockly.Python.definitions_['import_bluetoot_repl'] = 'import ble_uart_repl';
+  var code = 'ble_uart_repl.start()\n';
+  return code;
+};
+
+Blockly.Python['bluetooth_repl_setup'] = function(block) {
+  Blockly.Python.definitions_['import_bluetoot_repl'] = 'import ble_uart_repl';
+  var code = '\n';
+  return code;
+};
+
+//ST7789 display
+Blockly.Python['st7789_init'] = function(block) {
+  var scl = Blockly.Python.valueToCode(block, 'scl', Blockly.Python.ORDER_ATOMIC);
+  var sda = Blockly.Python.valueToCode(block, 'sda', Blockly.Python.ORDER_ATOMIC);
+  var i2c = Blockly.Python.valueToCode(block, 'i2c', Blockly.Python.ORDER_ATOMIC);
+
+  Blockly.Python.definitions_['import_machine'] = 'import machine';
+  Blockly.Python.definitions_['import_st7789py'] = 'import st7789py';
+
+  var code  = 'spi = machine.SPI(1, baudrate=40000000, polarity=1)\n';
+      code += 'display7789 = st7789py.ST7789(spi, 240, 240, reset=machine.Pin(5, machine.Pin.OUT), dc=machine.Pin(4, machine.Pin.OUT))\n';
+      code += 'display.init()\n';
+  return code;
+};
+
+Blockly.Python['st7789_pixel'] = function(block) {
+  var x = Blockly.Python.valueToCode(block, 'x', Blockly.Python.ORDER_ATOMIC);
+  var y = Blockly.Python.valueToCode(block, 'y', Blockly.Python.ORDER_ATOMIC);
+  var c = Blockly.Python.valueToCode(block, 'color', Blockly.Python.ORDER_ATOMIC);
+  var code = 'display7789.pixel(' + x + ', ' + y + ', ' + c + ')\n';
+  return code;
+};
+
+Blockly.Python['st7789_line'] = function(block) {
+  var x0 = Blockly.Python.valueToCode(block, 'x0', Blockly.Python.ORDER_ATOMIC);
+  var x1 = Blockly.Python.valueToCode(block, 'x1', Blockly.Python.ORDER_ATOMIC);
+  var y0 = Blockly.Python.valueToCode(block, 'y0', Blockly.Python.ORDER_ATOMIC);
+  var y1 = Blockly.Python.valueToCode(block, 'y1', Blockly.Python.ORDER_ATOMIC);
+  var c = Blockly.Python.valueToCode(block, 'color', Blockly.Python.ORDER_ATOMIC);
+  var code = 'display7789.line(' + x0 + ',' + y0 + ',' + ',' + x1 + ',' + y1 + ',' + c + ')\n';
+  return code;
+};
+
+
+//Other st7789 functions
+/*
+def set_window(self, x0, y0, x1, y1):
+def vline(self, x, y, length, color):
+def hline(self, x, y, length, color):
+def pixel(self, x, y, color):
+def blit_buffer(self, buffer, x, y, width, height):
+def rect(self, x, y, w, h, color):
+def fill_rect(self, x, y, width, height, color):
+def fill(self, color):
+def line(self, x0, y0, x1, y1, color):
+*/

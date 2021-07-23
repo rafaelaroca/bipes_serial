@@ -294,6 +294,7 @@ Code.attemptCodeGeneration = function(generator, prettyPrintType, domTarget) {
   content.textContent = '';
   if (Code.checkAllGeneratorFunctionsDefined(generator)) {
     var code = generator.workspaceToCode(Code.workspace);
+    code+="\n#End of BIPES generated code";
 
     content.textContent = code;
     if (typeof PR.prettyPrintOne == 'function') {

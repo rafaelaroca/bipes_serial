@@ -10011,4 +10011,129 @@ Blockly.Blocks['bipes_plot'] = {
   }
 };
 
+//REPL over Web Bluetooth
+Blockly.Blocks['bluetooth_repl_start'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Start Web Bluetooth REPL");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(0);
+ this.setTooltip("Start REPL over Web Bluetooth");
+ this.setHelpUrl("www.bipes.net.br");
+  }
+};
+
+Blockly.Blocks['bluetooth_repl_setup'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Setup Web Bluetooth REPL");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(0);
+ this.setTooltip("Setup Web Bluetooth REPL");
+ this.setHelpUrl("www.bipes.net.br");
+  }
+};
+
+//ST7789 display
+Blockly.Blocks['st7789_init'] = {
+  init: function() {
+    this.setColour(135);
+    this.appendDummyInput()
+        .appendField("Init ST7789 Display");
+
+ this.appendDummyInput()
+      .appendField(new Blockly.FieldImage(
+        "media/oled.png",
+        55,
+        55,
+        "*"));
+        //.setAlign(Blockly.ALIGN_CENTRE);
+
+    this.appendValueInput("i2c")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("I2C");
+
+    this.appendValueInput("scl")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("SCL");
+
+    this.appendValueInput("sda")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("SDA");
+
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip('');
+  }
+};
+
+Blockly.Blocks['st7789_pixel'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Draw pixel on ST7789 display");
+
+    this.appendValueInput("x")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("X position");
+    this.appendValueInput("y")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Y position");
+    this.appendValueInput("c")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Color");
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+
+ this.setTooltip("Plot pixel to ST7789 display");
+ this.setHelpUrl("http://www.bipes.net.br");
+  }
+};
+
+Blockly.Blocks['st7789_line'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Draw line on ST7789 display");
+
+    this.appendValueInput("x0")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("X0 position");
+    this.appendValueInput("y0")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Y0 position");
+
+    this.appendValueInput("x1")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("X1 position");
+    this.appendValueInput("y1")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Y1 position");
+
+    this.appendValueInput("c")
+        .setCheck("Number")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Color");
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+
+ this.setTooltip("Draw line on ST7789 display");
+ this.setHelpUrl("http://www.bipes.net.br");
+  }
+};
+
 
