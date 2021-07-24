@@ -207,7 +207,10 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
 		-->
           <button id="SerialConnectButton" type="button" disabled>Connect (Web Serial)
           </button>
-	  <input type="checkbox" id="resetBoard" value="off">Reset board on connect
+
+	  <button id="clientConnectButton" type="button" onclick="connectionToggle()">Connect (Web Bluetooth)</button>
+
+	  <input type="checkbox" id="resetBoard" value="off">Reset and detect board on connect
         </form>
         <div style="display:inline-block; vertical-align:top; ">
           <div id="term">
@@ -374,6 +377,188 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     </body>
   <script>
     
+
+//----------------------------------------------------------
+//Rafael - testing bluetooth REPL using Web Bluetooth
+//Parts of code below copied and modified from: https://github.com/rafaelaroca/web-device-cli/blob/master/js/app.js
+//Tue Jul 20 23:40:23 -03 2021
+
+
+const bleNusServiceUUID  = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const bleNusCharRXUUID   = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+const bleNusCharTXUUID   = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+const MTU = 20;
+
+var bleDevice;
+var bleServer;
+var nusService;
+var rxCharacteristic;
+var txCharacteristic;
+
+var connectedBt = false;
+
+function connectionToggle() {
+    if (connectedBt) {
+        disconnectBt();
+    } else {
+        connectBt();
+    }
+}
+
+// Sets button to either Connect or Disconnect
+function setConnButtonState(enabled) {
+    if (enabled) {
+        document.getElementById("clientConnectButton").innerHTML = "Disconnect (Bluetooth)";
+    } else {
+        document.getElementById("clientConnectButton").innerHTML = "Connect (Web Bluetooth)";
+    }
+}
+
+function connectBt() {
+    if (!navigator.bluetooth) {
+        console.log('WebBluetooth API is not available.\r\n' +
+                    'Please make sure the Web Bluetooth flag is enabled.');
+        term.write('WebBluetooth API is not available on your browser.\r\n' +
+                    'Please make sure the Web Bluetooth flag is enabled.');
+        return;
+    }
+    console.log('Requesting Bluetooth Device...');
+    navigator.bluetooth.requestDevice({
+        //filters: [{services: []}]
+        optionalServices: [bleNusServiceUUID],
+        acceptAllDevices: true
+    })
+    .then(device => {
+        bleDevice = device;
+        console.log('Found ' + device.name);
+        console.log('Connecting to GATT Server...');
+        bleDevice.addEventListener('gattserverdisconnected', onDisconnected);
+        return device.gatt.connect();
+    })
+    .then(server => {
+        console.log('Locate NUS service');
+        return server.getPrimaryService(bleNusServiceUUID);
+    }).then(service => {
+        nusService = service;
+        console.log('Found NUS service: ' + service.uuid);
+    })
+    .then(() => {
+        console.log('Locate RX characteristic');
+        return nusService.getCharacteristic(bleNusCharRXUUID);
+    })
+    .then(characteristic => {
+        rxCharacteristic = characteristic;
+        console.log('Found RX characteristic');
+    })
+    .then(() => {
+        console.log('Locate TX characteristic');
+        return nusService.getCharacteristic(bleNusCharTXUUID);
+    })
+    .then(characteristic => {
+        txCharacteristic = characteristic;
+        console.log('Found TX characteristic');
+    })
+    .then(() => {
+        console.log('Enable notifications');
+        return txCharacteristic.startNotifications();
+    })
+    .then(() => {
+        console.log('Notifications started');
+        txCharacteristic.addEventListener('characteristicvaluechanged',
+                                          handleNotifications);
+	term.on('data', function(data) {
+	  serialWrite(data);
+	});
+
+        connectedBt = true;
+        connected = true;
+        term.write('\r\n' + bleDevice.name + ' Connected.');
+        nusSendString('\r');
+        setConnButtonState(true);
+    })
+    .catch(error => {
+        console.log('' + error);
+        term.write('' + error);
+        if(bleDevice && bleDevice.gatt.connected)
+        {
+            bleDevice.gatt.disconnect();
+        }
+    });
+}
+
+function disconnectBt() {
+    if (!bleDevice) {
+        console.log('No Bluetooth Device connected...');
+        return;
+    }
+    console.log('Disconnecting from Bluetooth Device...');
+    if (bleDevice.gatt.connected) {
+        bleDevice.gatt.disconnect();
+        connectedBt = false;
+	connected = false;
+        setConnButtonState(false);
+        console.log('Bluetooth Device connected: ' + bleDevice.gatt.connected);
+    } else {
+        console.log('> Bluetooth Device is already disconnected');
+    }
+}
+
+function onDisconnected() {
+    connectedBt = false;
+    connected = false;
+    term.write('\r\n' + bleDevice.name + ' Disconnected.');
+    setConnButtonState(false);
+}
+
+function handleNotifications(event) {
+    //console.log('notification');
+    let value = event.target.value;
+    // Convert raw data bytes to character values and use these to
+    // construct a string.
+    let str = "";
+    for (let i = 0; i < value.byteLength; i++) {
+        str += String.fromCharCode(value.getUint8(i));
+    }
+    term.write(str);
+    bipesVerify(str);
+}
+
+function nusSendString(s) {
+    if(bleDevice && bleDevice.gatt.connected) {
+        //console.log("bt send: " + s);
+        let val_arr = new Uint8Array(s.length)
+        for (let i = 0; i < s.length; i++) {
+            let val = s[i].charCodeAt(0);
+            val_arr[i] = val;
+        }
+        sendNextChunk(val_arr);
+    } else {
+        term.write('Not connected to a device yet.');
+    }
+}
+
+function sendNextChunk(a) {
+    let chunk = a.slice(0, MTU);
+    rxCharacteristic.writeValue(chunk)
+      .then(function() {
+          if (a.length > MTU) {
+              sendNextChunk(a.slice(MTU));
+          }
+      })
+	 .catch(() =>  {
+                console.log("JR DOMException: GATT operation already in progress.")
+                return Promise.resolve()
+                    .then(() => this.delayPromise(500))
+                    .then(() => { rxCharacteristic.writeValue(chunk);});
+            });
+	;
+}
+
+
+
+//Enf of paste from web-device-cli
+//----------------------------------------------------------
+
     var term;
     var ws;
     var connected = false;
@@ -395,6 +580,10 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     var lineIn = "";
     var linesIn = "";
     var lineCnt=0;
+    var bipesProgramRunning=0;
+    var bipesSendStr="";
+    var bipesSendStrIndex=0;
+    var bipesBoardBoot=0;
 
     function calculate_size(win) {
       //    var cols = Math.max(80, Math.min(150, (win.innerWidth - 280) / 7)) | 0;
@@ -428,7 +617,6 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
         }
                            );
         term.open(document.getElementById("term"));
-        show_https_warning();
         loadPage();
       };
       window.addEventListener('resize', function() {
@@ -439,161 +627,24 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
                              );
     }
     ).call(this);
-    function show_https_warning() {
-      return;
-      if (window.location.protocol == 'https:') {
-        var warningDiv = document.createElement('div');
-        warningDiv.style.cssText = 'background:#f99;padding:5px;margin-bottom:10px;line-height:1.5em;text-align:center';
-        warningDiv.innerHTML = [
-          'At this time, the WebREPL client cannot be accessed over HTTPS connections.',
-          'Use a HTTP connection, eg. <a href="http://micropython.org/webrepl/">http://micropython.org/webrepl/</a>.',
-          'Alternatively, download the files from <a href="https://github.com/micropython/webrepl">GitHub</a> and run them locally.'
-        ].join('<br>');
-        document.body.insertBefore(warningDiv, document.body.childNodes[0]);
-        term.resize(term.cols, term.rows - 7);
-      }
-    }
+
     function button_click() {
       if (connected) {
-        ws.close();
+        //ws.close();
       }
       else {
         document.getElementById('url').disabled = true;
         document.getElementById('button').value = "Disconnect";
         connected = true;
-        connect(document.getElementById('url').value);
       }
     }
     function prepare_for_connect() {
-      document.getElementById('url').disabled = false;
       document.getElementById('button').value = "Connect";
     }
     function update_file_status(s) {
       document.getElementById('file-status').innerHTML = s;
     }
-    function connect(url) {
-      ws = new WebSocket(url);
-      ws.binaryType = 'arraybuffer';
-      ws.onopen = function() {
-        term.removeAllListeners('data');
-        term.on('data', function(data) {
-          // Pasted data from clipboard will likely contain
-          // LF as EOL chars.
-          data = data.replace(/\n/g, "\r");
-          serialWrite(data);
-        }
-               );
-        term.on('title', function(title) {
-          document.title = title;
-        }
-               );
-        term.focus();
-        term.element.focus();
-        term.write('\x1b[31mWelcome to BIPES Project using MicroPython!\x1b[m\r\n');
-        ws.onmessage = function(event) {
-		/*
-          if (event.data instanceof ArrayBuffer) {
-            var data = new Uint8Array(event.data);
-            switch (binary_state) {
-              case 11:
-                // first response for put
-                if (decode_resp(data) == 0) {
-                  // send file data in chunks
-                  for (var offset = 0; offset < put_file_data.length; offset += 1024) {
-                    serialWrite(put_file_data.slice(offset, offset + 1024));
-                  }
-                  binary_state = 12;
-                }
-                break;
-              case 12:
-                // final response for put
-                if (decode_resp(data) == 0) {
-                  update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
-                }
-                else {
-                  update_file_status('Failed sending ' + put_file_name);
-                }
-                binary_state = 0;
-                break;
-              case 21:
-                // first response for get
-                console.log('get 1');
-                if (decode_resp(data) == 0) {
-                  console.log('get 2');
-                  binary_state = 22;
-                  var rec = new Uint8Array(1);
-                  rec[0] = 0;
-                  serialWrite(rec);
-                }
-                break;
-              case 22: {
-                // file data
-                var sz = data[0] | (data[1] << 8);
-                if (data.length == 2 + sz) {
-                  // we assume that the data comes in single chunks
-                  if (sz == 0) {
-                    // end of file
-                    binary_state = 23;
-                  }
-                  else {
-                    // accumulate incoming data to get_file_data
-                    var new_buf = new Uint8Array(get_file_data.length + sz);
-                    new_buf.set(get_file_data);
-                    new_buf.set(data.slice(2), get_file_data.length);
-                    get_file_data = new_buf;
-                    update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                    var rec = new Uint8Array(1);
-                    rec[0] = 0;
-                    serialWrite(rec);
-                  }
-                }
-                else {
-                  binary_state = 0;
-                }
-                break;
-              }
-              case 23:
-                // final response
-                if (decode_resp(data) == 0) {
-                  update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                  if (!viewOnly)
-                    saveAs(new Blob([get_file_data], {
-                      type: "application/octet-stream"}
-                                   ), get_file_name);
-                  else
-                    //updateSourceCode([get_file_data]);
-                    updateSourceCode(new Blob([get_file_data], {
-                      type: "text/plain"}
-                                             ), get_file_name);
-                }
-                else {
-                  update_file_status('Failed getting ' + get_file_name);
-                }
-                binary_state = 0;
-                break;
-              case 31:
-                // first (and last) response for GET_VER
-                console.log('GET_VER', data);
-                binary_state = 0;
-                break;
-            }
-          }
-		*/
-          term.write(event.data);
-          //byte by byte...
-          //alert(event.data);
-          received_string = received_string.concat(event.data);
-        };
-      };
-      ws.onclose = function() {
-        connected = false;
-        if (term) {
-          term.write('\x1b[31mDisconnected\x1b[m\r\n');
-        }
-        term.off('data');
-        prepare_for_connect();
-      }
-    }
+
     function decode_resp(data) {
       if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
         var code = data[2] | (data[3] << 8);
@@ -971,19 +1022,63 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
       var code = Blockly.Python.workspaceToCode(Code.workspace);
       code+="#End of BIPES generated code";
       var textArray = code.split(/\r\n|\r|\n/);
+      
+      var currentdate = new Date();
+      var datetime = currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+      
       console.log(code);
-      //ws.send('\x05');
       serialWrite('\x05');
-      await asleep(20);
+      //await asleep(20);
+      sleep(20);
+      //textArray.forEach(function(line, index, array) {
       textArray.forEach(async function(line, index, array) {
-        //ws.send(line+'\r');
+	console.log(line);
         serialWrite(line+'\r');
-        await asleep(50);
-      }
-                       );
+	await asleep(20);
+      });
+
+      //bt_send(code,100);
       //ws.send('\x04');
       serialWrite('\x04');
+
+      BIPES ['notify'].send("[" + datetime + '] BIPES Program started');
+      bipesProgramRunning=1;
+      lineCnt=0;
+
     }
+
+      function bt_send (pack_, delay_) {
+	this.bytes = pack_.length;
+	this.pack = pack_;
+	i = 0;
+
+	this.promise = new Promise (
+		(resolve, reject) => {
+			let interval_ = window.setInterval (() => {
+				terminal_send(this.pack[i])
+				i +=1;
+				if (i == this.bytes)
+					resolve (`Sent "${this.pack}"`),
+					clearInterval (interval_);
+			}, delay_);
+    });
+
+	this.promise.then ((resolved_) => {
+		console.log(resolved_);
+    });
+}
+
+function terminal_send (str_) {
+	serialWrite(str_); //envia para o console do navegador, mudar para a func. que envia para a board
+}
+
+
+//bt_send ("import utime", 50);
+
+
+
     function files_run(file) {
       update_file_status('Executing  ' + file);
       //Filename without .py
@@ -1157,12 +1252,18 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     let latestValue = 0;
     //async function serialWrite(data) {
     function serialWrite(data) {
-      encoder = new TextEncoder();
-      const dataArrayBuffer = encoder.encode(data);
-      if (port && port.writable) {
-        const writer = port.writable.getWriter();
-        writer.write(dataArrayBuffer);
-        writer.releaseLock();
+      if (connectedBt) {
+	//console.log("BT connected - sending using BT");
+	nusSendString(data);
+      } else {
+	      //console.log("BT not connected - sending using serial");
+	      encoder = new TextEncoder();
+	      const dataArrayBuffer = encoder.encode(data);
+	      if (port && port.writable) {
+		const writer = port.writable.getWriter();
+		writer.write(dataArrayBuffer);
+		writer.releaseLock();
+	      }
       }
     }
     async function serialWriteE(data) {
@@ -1197,10 +1298,29 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
         write(chunk) {
           //term.write(chunk);
           //console.log('.' + chunk);
-          var dataIn = chunk;
           //var dataIn = new Uint8Array(chunk);
           //console.log('binary state = ' + binary_state);
           //console.log("chunk = " + dataIn);
+	  
+	  bipesVerify(chunk);
+          
+          term.write(chunk);
+         
+	}}
+                                             );
+      port.readable
+        .pipeThrough(new TextDecoderStream())
+        .pipeTo(appendStream);
+      term.on('data', function(data) {
+        serialWrite(data);
+      }
+             );
+      setTimeout(sendSerialHello, 500);
+    }
+
+    function bipesVerify(strIn) {
+          var dataIn = strIn;
+
           switch (binary_state) {
             case 91:
               binary_state = 92;
@@ -1210,7 +1330,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
               //console.log("len = " + dataIn.length);
               break;
           }
-          received_string2 = received_string2.concat(chunk);
+          received_string2 = received_string2.concat(strIn);
 
           if (waitingFileSize == 1) {
 		  waitingFileSize=0;
@@ -1235,94 +1355,17 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
             }
                        , 1200);
           }
-		/*
-          if (chunk instanceof ArrayBuffer) {
-            if (binary_state == 12) {
-              // final response for put
-              if (decode_resp(data) == 0) {
-                update_file_status('Sent ' + put_file_name + ', ' + put_file_data.length + ' bytes');
-              }
-              else {
-                update_file_status('Failed sending ' + put_file_name);
-              }
-              binary_state = 0;
-            }
-            if (binary_state == 11) {
-              // first response for put
-              if (decode_resp(data) == 0) {
-                // send file data in chunks
-                for (var offset = 0; offset < put_file_data.length; offset += 1024) {
-                  serialWrite(put_file_data.slice(offset, offset + 1024));
-                }
-                binary_state = 12;
-              }
-            }
-            if (binary_state == 23) {
-              // final response
-              if (decode_resp(data) == 0) {
-                update_file_status('Got ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                if (!viewOnly)
-                  saveAs(new Blob([get_file_data], {
-                    type: "application/octet-stream"}
-                                 ), get_file_name);
-                else
-                  //updateSourceCode([get_file_data]);
-                  updateSourceCode(new Blob([get_file_data], {
-                    type: "text/plain"}
-                                           ), get_file_name);
-              }
-              else {
-                update_file_status('Failed getting ' + get_file_name);
-              }
-              binary_state = 0;
-            }
-            if (binary_state == 23) {
-              // first (and last) response for GET_VER
-              console.log('GET_VER', data);
-              binary_state = 0;
-            }
-            if (binary_state == 22) {
-              // file data
-              var sz = data[0] | (data[1] << 8);
-              if (data.length == 2 + sz) {
-                // we assume that the data comes in single chunks
-                if (sz == 0) {
-                  // end of file
-                  binary_state = 23;
-                }
-                else {
-                  // accumulate incoming data to get_file_data
-                  var new_buf = new Uint8Array(get_file_data.length + sz);
-                  new_buf.set(get_file_data);
-                  new_buf.set(data.slice(2), get_file_data.length);
-                  get_file_data = new_buf;
-                  update_file_status('Getting ' + get_file_name + ', ' + get_file_data.length + ' bytes');
-                  var rec = new Uint8Array(1);
-                  rec[0] = 0;
-                  serialWrite(rec);
-                }
-              }
-              else {
-                binary_state = 0;
-              }
-            }
-            if (binary_state == 21) {
-              // first response for get
-              if (decode_resp(data) == 0) {
-                binary_state = 22;
-                var rec = new Uint8Array(1);
-                rec[0] = 0;
-                serialWrite(rec);
-              }
-            }
-          }
-	      */
-          //term.write(event.data);
-          term.write(chunk);
-          //console.log("Chunk: ----- ");
-          //console.log(chunk);
-          //console.log("----- ");
+	      
+          received_string = received_string.concat(strIn);
           for (var i = 0; i < dataIn.length; i++) {
+	    //Wait for >>>
+	    if ((dataIn.charAt(i) == '>'))
+              lineCnt=30;
+	    if ((dataIn.charAt(i) == '>') && lineCnt==30 && lastChar=='>') 
+              lineCnt=31;
+	    if ((dataIn.charAt(i) == '>') && lineCnt==31 && lastChar=='>') 
+              lineCnt=32;
+
             if ((dataIn.charAt(i) == 'B')) 
               lineCnt=1;
             if ((dataIn.charAt(i) == 'I') && lineCnt==1) 
@@ -1369,33 +1412,38 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
               lineIn="";
               lineCnt=12;
             }
-          }
-          received_string = received_string.concat(chunk);
-          //byte by byte...
-          //alert(event.data);
-          //received_string = received_string.concat(event.data);
-          //////////////////////COPIADO DE CIMA DO WEBSOCKET
-          //////////////////////COPIADO DE CIMA DO WEBSOCKET
-          //////////////////////COPIADO DE CIMA DO WEBSOCKET
-          //////////////////////COPIADO DE CIMA DO WEBSOCKET
-        }
-      }
-                                             );
-      port.readable
-        .pipeThrough(new TextDecoderStream())
-        .pipeTo(appendStream);
-      term.on('data', function(data) {
-        serialWrite(data);
-      }
-             );
-      setTimeout(sendSerialHello, 500);
-    }
-    function sendSerialHello() {
+	    if ((lineCnt==32) && (bipesProgramRunning==1)) {
 
+	      if(bipesBoardBoot==1) {
+		       console.log('board boot');
+		       //changeDevice("ESP32");//muda select box, mas nao muda toolbox
+		       console.log(received_string);
+		       bipesBoardBoot=0;
+	      }
+
+	      var currentdate = new Date();
+	      var datetime = currentdate.getHours() + ":"
+			+ currentdate.getMinutes() + ":"
+			+ currentdate.getSeconds();
+	      BIPES ['notify'].send("[" + datetime + '] BIPES Program ended');
+	      bipesProgramRunning=0;
+              lineIn="";
+              lineCnt=0;
+	    }
+            //console.log('lineCnt=' + lineCnt + ' pr=' + bipesProgramRunning + ' lastChar=' + lastChar + ' currentChar=' + dataIn.charAt(i));
+	    lastChar=dataIn.charAt(i);
+          }
+       
+    }
+
+    function sendSerialHello() {
       var chkReset = document.getElementById("resetBoard");
-      if (chkReset.checked) {
+      if ((chkReset.checked) && (!connectedBt)) { //Only reset for USB connections
+	      bipesProgramRunning=1;
+              bipesBoardBoot=1;
+              received_string ="";
 	      term.write('\x1b[31mResetting the board...\x1b[m\r\n');
-	      serialWrite("\rmachine.soft_reset()\r\r");
+	      serialWrite("\rimport machine\rmachine.soft_reset()\r\r");
 	      serialWrite('\x03');
 	      serialWrite('\x03');
       }
