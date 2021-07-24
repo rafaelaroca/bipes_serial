@@ -126,7 +126,8 @@ Blockly.Python['play_mp3'] = function(block) {
 };
 
 Blockly.Python['esp32_adc'] = function(block) {
-  Blockly.Python.definitions_['import_machine_adc'] = 'from  machine import Pin,ADC';
+  Blockly.Python.definitions_['import_adc'] = 'from machine import ADC';
+  Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
   var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
   var x = value_pin.replace('(','').replace(')','');
 
@@ -135,23 +136,23 @@ Blockly.Python['esp32_adc'] = function(block) {
 
   var atten = 'ADC.ATTN_0DB';
   if (dropdown_attenuation==0)
-		  atten = 'ADC.ATTN_0DB';
+                  atten = 'ADC.ATTN_0DB';
   if (dropdown_attenuation==1)
-		  atten = 'ADC.ATTN_2_5DB';
+                  atten = 'ADC.ATTN_2_5DB';
   if (dropdown_attenuation==2)
-		  atten = 'ADC.ATTN_6DB';
+                  atten = 'ADC.ATTN_6DB';
   if (dropdown_attenuation==3)
-		  atten = 'ADC.ATTN_11DB';
+                  atten = 'ADC.ATTN_11DB';
 
   var w = 'ADC.WIDTH_10BIT';
   if (dropdown_width__==0)
-	w = 'ADC.WIDTH_9BIT';
+        w = 'ADC.WIDTH_9BIT';
   if (dropdown_width__==1)
-	w = 'ADC.WIDTH_10BIT';
+        w = 'ADC.WIDTH_10BIT';
   if (dropdown_width__==2)
-	w = 'ADC.WIDTH_11BIT';
+        w = 'ADC.WIDTH_11BIT';
   if (dropdown_width__==3)
-	w = 'ADC.WIDTH_12BIT';
+        w = 'ADC.WIDTH_12BIT';
 
 
   Blockly.Python.definitions_['init_adc' + x] = 'adc' + x + '=ADC(Pin(' + x + '))\nadc' + x + '.atten(' + atten + ')\nadc' + x + '.width(' + w + ')\n';
@@ -327,7 +328,6 @@ Blockly.Python['init_oled'] = function(block) {
   var scl = Blockly.Python.valueToCode(block, 'scl', Blockly.Python.ORDER_ATOMIC);
   var sda = Blockly.Python.valueToCode(block, 'sda', Blockly.Python.ORDER_ATOMIC);
   var i2c = Blockly.Python.valueToCode(block, 'i2c', Blockly.Python.ORDER_ATOMIC);
-
 
   Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
   Blockly.Python.definitions_['import_oled_a'] = 'from machine import I2C';
@@ -4038,7 +4038,6 @@ Blockly.Python['ticks_diff'] = function(block) {
 
 };
 
-
 Blockly.Python['esp32_get_rtc'] = function(block) {
   Blockly.Python.definitions_['import_rtc'] = 'from machine import RTC';
   Blockly.Python.definitions_['import_rtc_def'] = 'rtc = RTC()';
@@ -4046,7 +4045,6 @@ Blockly.Python['esp32_get_rtc'] = function(block) {
   var code = 'rtc.datetime()';
   return [code, Blockly.Python.ORDER_NONE];
 };
-
 
 
 
@@ -4095,8 +4093,6 @@ Blockly.Python['esp8266_set_rtc'] = function(block) {
 };
 
 
-
-
 Blockly.Python['stop_timer'] = function(block) {
   Blockly.Python.definitions_['import_timer'] = 'from machine import Timer';
   
@@ -4105,8 +4101,6 @@ Blockly.Python['stop_timer'] = function(block) {
 
   return code;
 };
-
-
 Blockly.Python['thread'] = function(block) {
 
   var interval = block.getFieldValue('interval');
@@ -4121,7 +4115,6 @@ Blockly.Python['thread'] = function(block) {
              
   return code;
 };
-
 
 
 Blockly.Python['timer'] = function(block) {
@@ -4175,7 +4168,6 @@ Blockly.Python['deep_sleep'] = function(block) {
 	var code = 'machine.deepsleep(' + value_interval + ')\n';
 	return code;
   };
-	  
 
 
 Blockly.Python['pwm'] = function(block) {
@@ -4187,7 +4179,7 @@ Blockly.Python['pwm'] = function(block) {
   	
 	var x = value_pin.replace('(','').replace(')','');
 
-	Blockly.Python.definitions_['init_pwm' + x] = 'pwm' + x + " = PWM(machine.Pin(" + x + "))";
+	Blockly.Python.definitions_['init_pwm' + x] = 'pwm' + x + " = PWM(Pin(" + x + "))";
 
 	var code = 'pwm' + x + '.freq(' + value_frequency + ')\npwm' + x + '.duty(' + value_duty + ')\n';
 
@@ -4212,7 +4204,6 @@ Blockly.Python['esp32_pwm'] = function(block) {
 	//var code = 'PWM(Pin(' + value_pin +'), freq=' + value_frequency + ', duty = ' + value_duty + ')\n';
 	return code;
   };
-
 
 
 //Sckit-Learn Test
