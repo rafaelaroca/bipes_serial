@@ -130,7 +130,7 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
             </a>
           </div>
           <div class="icon" id="deviceSelect">
-            <select id="device_selector" onchange="changeDevice(this.value)">
+            <select id="device_selector">
               <option value="ESP8266">ESP8266
               </option>
               <option value="ESP32S2">Franzininho Wifi (ESP32-S2)
@@ -387,7 +387,6 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
 const bleNusServiceUUID  = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const bleNusCharRXUUID   = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 const bleNusCharTXUUID   = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
-const MTU = 20;
 
 var bleDevice;
 var bleServer;
@@ -525,33 +524,34 @@ function handleNotifications(event) {
 
 function nusSendString(s) {
     if(bleDevice && bleDevice.gatt.connected) {
-        //console.log("bt send: " + s);
-        let val_arr = new Uint8Array(s.length)
-        for (let i = 0; i < s.length; i++) {
-            let val = s[i].charCodeAt(0);
-            val_arr[i] = val;
-        }
-        sendNextChunk(val_arr);
+        sendNextChunk(rxCharacteristic, s);
     } else {
         term.write('Not connected to a device yet.');
     }
 }
 
-function sendNextChunk(a) {
-    let chunk = a.slice(0, MTU);
-    rxCharacteristic.writeValue(chunk)
-      .then(function() {
-          if (a.length > MTU) {
-              sendNextChunk(a.slice(MTU));
-          }
-      })
-	 .catch(() =>  {
-                console.log("JR DOMException: GATT operation already in progress.")
-                return Promise.resolve()
-                    .then(() => this.delayPromise(500))
-                    .then(() => { rxCharacteristic.writeValue(chunk);});
-            });
-	;
+
+function delayPromise(delay) {
+    return new Promise(resolve => {
+        setTimeout(resolve, delay);
+    });
+}
+
+function sendNextChunk(characteristic, operation) {
+    return new Promise((resolve, reject) => {
+        let size = new ArrayBuffer(operation.length);
+        const value = new Uint8Array(size);
+        value.set(operation.split('').map(l => l.charCodeAt(0)), 0);
+
+        characteristic.writeValue(value)
+        .catch(e => {
+            BIPES ['notify'].log (e);
+            return Promise.resolve()
+                .then(() => this.delayPromise(500))
+                // Retry once
+                .then(() => characteristic.writeValue(value));
+        });
+    });
 }
 
 
@@ -980,8 +980,7 @@ function sendNextChunk(a) {
           resolve(files[0]);
         };
         input.click();
-      }
-                        );
+      });
     }
     async function runPythonCode(pCodeIn) {
     //function runPythonCode(pCodeIn) {
@@ -1023,11 +1022,6 @@ function sendNextChunk(a) {
       code+="#End of BIPES generated code";
       var textArray = code.split(/\r\n|\r|\n/);
       
-      var currentdate = new Date();
-      var datetime = currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
-      
       console.log(code);
       serialWrite('\x05');
       //await asleep(20);
@@ -1043,7 +1037,7 @@ function sendNextChunk(a) {
       //ws.send('\x04');
       serialWrite('\x04');
 
-      BIPES ['notify'].send("[" + datetime + '] BIPES Program started');
+      BIPES ['notify'].send(MSG['programStarted']);
       bipesProgramRunning=1;
       lineCnt=0;
 
@@ -1416,16 +1410,12 @@ function terminal_send (str_) {
 
 	      if(bipesBoardBoot==1) {
 		       console.log('board boot');
-		       //changeDevice("ESP32");//muda select box, mas nao muda toolbox
+		       BIPES ['workspace'].changeTo ("ESP32");
 		       console.log(received_string);
 		       bipesBoardBoot=0;
 	      }
 
-	      var currentdate = new Date();
-	      var datetime = currentdate.getHours() + ":"
-			+ currentdate.getMinutes() + ":"
-			+ currentdate.getSeconds();
-	      BIPES ['notify'].send("[" + datetime + '] BIPES Program ended');
+	      BIPES ['notify'].send(MSG['programEnded']);
 	      bipesProgramRunning=0;
               lineIn="";
               lineCnt=0;
