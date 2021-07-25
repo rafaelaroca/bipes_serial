@@ -570,7 +570,7 @@ Blockly.Python['tm1640_custom'] = function (block) {
     var line8 = Number(checkbox_h0) * 2**0 + Number(checkbox_h1) * 2**1 + Number(checkbox_h2) * 2**2 + Number(checkbox_h3) * 2**3 + Number(checkbox_h4) * 2**4 + Number(checkbox_h5) * 2**5 + Number(checkbox_h6) * 2**6 + Number(checkbox_h7) * 2**7;
 
 
-    var code = 'tm.write([' + line8 + ',' + line7 + ',' + line6 + ',' + line5 + ',' + line5 + ',' + line3 + ',' + line2 + ',' + line1 + '])\n';
+    var code = 'tm.write([' + line8 + ',' + line7 + ',' + line6 + ',' + line5 + ',' + line4 + ',' + line3 + ',' + line2 + ',' + line1 + '])\n';
     return code;
 };
 
@@ -5183,9 +5183,18 @@ Blockly.Python['st7789_init'] = function(block) {
   Blockly.Python.definitions_['import_machine'] = 'import machine';
   Blockly.Python.definitions_['import_st7789py'] = 'import st7789py';
 
-  var code  = 'spi = machine.SPI(1, baudrate=40000000, polarity=1)\n';
-      code += 'display7789 = st7789py.ST7789(spi, 240, 240, reset=machine.Pin(5, machine.Pin.OUT), dc=machine.Pin(4, machine.Pin.OUT))\n';
+  var code  = '# turn on backlight\nbl = machine.Pin(4, machine.Pin.OUT)\nbl.value(1)\n';
+      code += 'spi = machine.SPI(1, baudrate=20000000, polarity=1, phase=1, sck=machine.Pin(18), mosi=machine.Pin(19))\n';
+      code += 'display7789 = st7789py.ST7789(spi, 135, 240, reset=machine.Pin(23, machine.Pin.OUT), cs=machine.Pin(5, machine.Pin.OUT), dc=machine.Pin(16, machine.Pin.OUT))\n';
       code += 'display7789.init()\n';
+  return code;
+};
+
+Blockly.Python['st7789_fill'] = function(block) {
+  var r = Blockly.Python.valueToCode(block, 'r', Blockly.Python.ORDER_ATOMIC);
+  var g = Blockly.Python.valueToCode(block, 'g', Blockly.Python.ORDER_ATOMIC);
+  var b = Blockly.Python.valueToCode(block, 'b', Blockly.Python.ORDER_ATOMIC);
+  var code = 'display7789.fill(st7789py.color565(' + r + ', ' + g + ', ' + b + '))\n';
   return code;
 };
 
@@ -5278,6 +5287,35 @@ Blockly.Python['simulate_water_boiler'] = function(block) {
 
   return [code, Blockly.Python.ORDER_NONE];
 };
+
+Blockly.Python["esp32_cam_init"] = function(block) {
+	Blockly.Python.definitions_['import_camera'] = 'import camera';
+	var code = "camera.init()\n"; 
+	return code;
+};
+
+Blockly.Python["esp32_cam_capture"] = function(block) {
+	Blockly.Python.definitions_['import_camera'] = 'import camera';
+	var code = "camera.capture()"; 
+	return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python["esp32_cam_red_led"] = function(block) {
+	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
+	Blockly.Python.definitions_['gpio_set'] = 'def gpio_set(pin,value):\n  if value >= 1:\n    Pin(pin, Pin.OUT).on()\n  else:\n    Pin(pin, Pin.OUT).off()';
+
+	var code = 'gpio_set(33' + ', ' + value_value + ')\n';
+	return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python["esp32_cam_white_led"] = function(block) {
+	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
+	Blockly.Python.definitions_['gpio_set'] = 'def gpio_set(pin,value):\n  if value >= 1:\n    Pin(pin, Pin.OUT).on()\n  else:\n    Pin(pin, Pin.OUT).off()';
+
+	var code = 'gpio_set(4' + ', ' + value_value + ')\n';
+	return [code, Blockly.Python.ORDER_NONE];
+};
+
 
 //Other st7789 functions
 /*
