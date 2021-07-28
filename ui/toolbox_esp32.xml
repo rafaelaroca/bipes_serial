@@ -1132,6 +1132,8 @@
       </block>
     </category>
 
+
+
   <category name="RC Servo Motor">
       <label text="Hobby RC Servo Motor"></label>
     <block type="init_servo">
@@ -1228,6 +1230,57 @@ _
   </category>
 
   </category>
+
+  <category name="Sounds">
+        <label text="Sounds and RTTTL:"></label>
+        <label text="Ring Tone Text Transfer Language (RTTTL) "></label>
+        <label text="Library: "></label>
+        <button text="Install rtttl library" callbackKey="installPyLib"></button>
+        <button text="Install songs library" callbackKey="installPyLib"></button>
+        <button text="Load example: songs" callbackKey="loadExample"></button>
+        <button text="Documentation and how to connect: sound" callbackKey="loadDoc"></button>
+
+    <block type="tone"> 
+      <value name="pin">
+        <shadow type="pinout">
+          <field name="pin"></field>
+        </shadow>
+      </value>
+     <value name="frequency">
+        <shadow type="math_number">
+          <field name="NUM">1200</field>
+        </shadow>
+      </value>
+ 
+    </block>
+    <block type="note"> 
+      <value name="pin">
+        <shadow type="pinout">
+          <field name="pin"></field>
+        </shadow>
+      </value>
+      <value name="note">
+        <shadow type="text">
+          <field name="TEXT">B1</field>
+        </shadow>
+      </value>
+    </block>
+
+    <block type="rtttl_play"> 
+      <value name="pin">
+        <shadow type="pinout">
+          <field name="pin"></field>
+        </shadow>
+      </value>
+      <value name="song">
+        <shadow type="text">
+          <field name="TEXT">Super Mario - Main Theme</field>
+        </shadow>
+      </value>
+    </block>
+  </category>
+
+
 
   <category name="Communication">
       <label text="Communication"></label>

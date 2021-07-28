@@ -5318,6 +5318,48 @@ Blockly.Python["esp32_cam_white_led"] = function(block) {
 	return code;
 };
 
+Blockly.Python["rtttl_play"] = function(block) {
+	var pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+	var song = Blockly.Python.valueToCode(block, 'song', Blockly.Python.ORDER_ATOMIC);
+	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
+	Blockly.Python.definitions_['import_rtttl'] = 'import rtttl, songs';
+
+	var code = 'play = rtttl.play(Pin(' + pin + ', Pin.OUT), songs.find(' + song + ')) \n';
+	return code;
+};
+
+Blockly.Python['tone'] = function(block) {
+	var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+	var value_frequency = Blockly.Python.valueToCode(block, 'frequency', Blockly.Python.ORDER_ATOMIC);
+	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
+	Blockly.Python.definitions_['import_pwm'] = 'from machine import PWM';
+  	
+	var x = value_pin.replace('(','').replace(')','');
+
+	var code = 'pwm' + x + ' = PWM(' + x + ', freq=' + value_frequency + ', ' + ', duty=512)\n';
+
+	return code;
+  };
+
+
+Blockly.Python['note'] = function(block) {
+	var value_pin = Blockly.Python.valueToCode(block, 'pin', Blockly.Python.ORDER_ATOMIC);
+	var value_frequency = Blockly.Python.valueToCode(block, 'note', Blockly.Python.ORDER_ATOMIC);
+	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
+	Blockly.Python.definitions_['import_pwm'] = 'from machine import PWM';
+  	
+	var x = value_pin.replace('(','').replace(')','');
+
+	var code = 'pwm' + x + ' = PWM(' + x + ', freq=' + value_frequency + ', ' + ', duty=512)\n';
+
+	return code;
+  };
+
+
+
+
+
+
 
 //Other st7789 functions
 /*

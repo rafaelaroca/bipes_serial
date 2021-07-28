@@ -10445,3 +10445,68 @@ Blockly.Blocks['esp32_cam_white_led'] = {
   }
 };
 
+//Sound
+Blockly.Blocks['tone'] = {
+  init: function(){
+    this.appendDummyInput()
+        .appendField("Tone (Hz)");
+
+    this.appendValueInput("pin")
+        .setCheck(null)
+	.appendField("Pin");
+    this.appendValueInput("frequency")
+        .setCheck("Number")
+	  .appendField("Frequency");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("Sound - tone generator");
+ this.setHelpUrl("http://www.bipes.net.br");
+ }
+};
+
+Blockly.Blocks['note'] = {
+  init: function(){
+    this.appendDummyInput()
+        .appendField("Play music note");
+    this.appendValueInput("pin")
+        .setCheck(null)
+	.appendField("Pin");
+
+    this.appendValueInput("note")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Note");
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("Sound - tone generator (music note)");
+ this.setHelpUrl("http://www.bipes.net.br");
+ }
+};
+
+
+
+Blockly.Blocks['rtttl_play'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Play song (RTTTL)");
+
+    this.appendValueInput("pin")
+        .setCheck(null)
+	.appendField("Pin");
+
+    this.appendValueInput("song")
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Song");
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("Control ESP32-CAM White LED (flashlight)");
+ this.setHelpUrl("bipes.net.br");
+  }
+};
+
+
+
