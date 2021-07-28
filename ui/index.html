@@ -522,9 +522,12 @@ function handleNotifications(event) {
     bipesVerify(str);
 }
 
+var buffer_ = [];
 function nusSendString(s) {
     if(bleDevice && bleDevice.gatt.connected) {
-        sendNextChunk(rxCharacteristic, s);
+        buffer_.push (s);
+        if (buffer_.length == 1)
+          sendNextChunk(rxCharacteristic, buffer_[0]);
     } else {
         term.write('Not connected to a device yet.');
     }
@@ -537,19 +540,27 @@ function delayPromise(delay) {
     });
 }
 
-function sendNextChunk(characteristic, operation) {
+
+function sendNextChunk (characteristic, operation) {
     return new Promise((resolve, reject) => {
         let size = new ArrayBuffer(operation.length);
         const value = new Uint8Array(size);
         value.set(operation.split('').map(l => l.charCodeAt(0)), 0);
-
-        characteristic.writeValue(value)
-        .catch(e => {
+        characteristic.writeValue(value).then(() => {
+            buffer_.shift();
+            if (buffer_.length > 0)
+               sendNextChunk (characteristic, buffer_[0]);
+        }).catch(e => {
             BIPES ['notify'].log (e);
             return Promise.resolve()
                 .then(() => this.delayPromise(500))
                 // Retry once
-                .then(() => characteristic.writeValue(value));
+                .then(() => characteristic.writeValue(value)).catch((e) => {
+                    buffer_ = [];
+                    BIPES ['notify'].log (e);
+                    if (e == "NetworkError: Failed to execute 'writeValue' on 'BluetoothRemoteGATTCharacteristic': GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.")
+                      BIPES ['notify'].send ("Lost Bluetooth connection.");
+                  });
         });
     });
 }

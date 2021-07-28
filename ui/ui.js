@@ -53,7 +53,7 @@ function notify () {
 	this.container.innerHTML = '';
 	this.panel = get (this.panel_);
   this.messages = [];
-  this.log = [];
+  this.logs = [];
   this.buffer_count = 0;
   this.timeOut;
   this.timeOut2;
@@ -102,7 +102,7 @@ notify.prototype.send = function (message) {
   }
 }
 notify.prototype.log = function (message) {
-  this.log.push ({timestamp: +new Date, message: message});
+  this.logs.push ({timestamp: +new Date, message: message});
 }
 
 function responsive () {
