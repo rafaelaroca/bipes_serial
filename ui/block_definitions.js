@@ -10457,6 +10457,15 @@ Blockly.Blocks['tone'] = {
     this.appendValueInput("frequency")
         .setCheck("Number")
 	  .appendField("Frequency");
+
+    this.appendValueInput("duration")
+        .setCheck("Number")
+	.appendField("Duration (s):");
+
+    this.appendDummyInput()
+        .appendField("(-1 for infinite duration)");
+
+
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
@@ -10476,6 +10485,13 @@ Blockly.Blocks['note'] = {
     this.appendValueInput("note")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Note");
+
+    this.appendValueInput("duration")
+        .setCheck("Number")
+	.appendField("Duration (s):");
+
+    this.appendDummyInput()
+        .appendField("(-1 for infinite duration)");
 
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
