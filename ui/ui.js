@@ -118,7 +118,7 @@ function responsive () {
 async function xhrGET (filename, responsetype, onsuccess, onfail) {
   let xmlHTTP = new XMLHttpRequest ();
 
-	xmlHTTP.open ('GET', filename);
+	xmlHTTP.open ('GET', `${filename}?ver=2.21-07-30`);
   xmlHTTP.responseType = responsetype;
   xmlHTTP.onload = function () {
     if (this.status == 200) {
