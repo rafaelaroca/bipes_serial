@@ -5467,11 +5467,7 @@ Blockly.Python['note'] = function(block) {
 
 	Blockly.Python.definitions_['import_pin'] = 'from machine import Pin';
 	Blockly.Python.definitions_['import_pwm'] = 'from machine import PWM';
-<<<<<<< HEAD
         Blockly.Python.definitions_['import_time'] = 'import time';
-=======
-  	Blockly.Python.definitions_['import_time'] = 'import time';
->>>>>>> 6946214473b228da4537a1486c472d9638e96ab5
   	
 	var x = value_pin.replace('(','').replace(')','');
 
