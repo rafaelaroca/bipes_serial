@@ -243,7 +243,8 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
           <input type="button" value="Clear terminal output" onclick="term.write('\x1bc');  " />
           <br>
           <br>
-	  <input type="checkbox" id="bipesBridge" value="off">EasyMQTT Bridge (<a href=#>Configure</a>)
+	  <input type="checkbox" id="bipesBridge" value="off">EasyMQTT Bridge (        <input type="button" value="Configure" onclick="window.open('easymqtt_bridge.html','popup','width=600,height=600'); return false;" target="popup"></input>
+)
 	  <!--
           <input type="button" value="Test queue " onclick="test(); " />
 	  -->
@@ -1351,6 +1352,16 @@ function terminal_send (str_) {
       setTimeout(sendSerialHello, 500);
     }
 
+
+function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+
+
+
     function bipesVerify(strIn) {
           var dataIn = strIn;
 
@@ -1442,6 +1453,20 @@ function terminal_send (str_) {
 		      if ((Number.isInteger(bipesID)) && (Number.isInteger(bipesValue))) {
 			let q = new Queue(bipesID);
 			q.enqueue(bipesValue);
+
+			var chkBridge = document.getElementById("bipesBridge");
+		        if (chkBridge.checked) {
+				//If the bridge is enabled, lets send
+				var easyMQTTsession = window.localStorage['bridgeSession'];
+				if (easyMQTTsession) {
+					console.log("session=" + easyMQTTsession);
+					var topic = "Topic" + bipesID;
+					var urlEM = "https://bipes.net.br/easymqtt/publish.php?session=" + easyMQTTsession + "&topic=" + topic + "&value=" + bipesValue;
+					console.log("urlEM=" + urlEM);
+					httpGetAsync(urlEM);
+				}
+
+			}
 		      }
 	      }
 
