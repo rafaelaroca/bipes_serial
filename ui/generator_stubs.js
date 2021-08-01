@@ -5256,9 +5256,11 @@ Blockly.Python['neopixel_write'] = function(block) {
 
 Blockly.Python['bipes_plot'] = function(block) {
   var value_values = Blockly.Python.valueToCode(block, 'values', Blockly.Python.ORDER_ATOMIC);
+  var value_id = Blockly.Python.valueToCode(block, 'id', Blockly.Python.ORDER_ATOMIC);
 
   var x = value_values.replace('\'','').replace('\'','');
-  var code = 'print(\'BIPES-PLOT:' + x + '\')\n';
+  var id = value_id.replace('\'','').replace('\'','');
+  var code = 'print(\'BIPES-DATA:' + id + ',' + x + '\')\n';
 
   return code;
 };

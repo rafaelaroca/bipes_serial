@@ -49,6 +49,8 @@
       background: #888;
     }
   </style>
+
+
   <link rel="stylesheet" href="style.css">
   <script src="storage.js">
   </script>
@@ -78,6 +80,11 @@
   </script>
   <script src="FileSaver.js">
   </script>
+
+
+  <!-- Queue for Serial -> Freeboad integration -->
+  <script src="queue.js">
+
   <script type="module">
   // This is the "Offline copy of pages" service worker
 /*
@@ -93,6 +100,8 @@ type="module"
 src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
 ></script>
 -->
+
+
   </head>
 <body>
   <table width="100%" height="100%">
@@ -232,6 +241,12 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
           <br>
           <br>
           <input type="button" value="Clear terminal output" onclick="term.write('\x1bc');  " />
+          <br>
+          <br>
+	  <input type="checkbox" id="bipesBridge" value="off">EasyMQTT Bridge (<a href=#>Configure</a>)
+	  <!--
+          <input type="button" value="Test queue " onclick="test(); " />
+	  -->
           <!--
 <div class="file-box">
 <strong>Send a file</strong>
@@ -376,7 +391,6 @@ src="https://cdn.jsdelivr.net/npm/@pwabuilder/pwainstall"
     </div>
     </body>
   <script>
-    
 
 //----------------------------------------------------------
 //Rafael - testing bluetooth REPL using Web Bluetooth
@@ -628,6 +642,20 @@ function sendNextChunk (characteristic, operation) {
         }
                            );
         term.open(document.getElementById("term"));
+
+	//Make sure we wont use data from last session (BIPES serial to freeboard bridge)
+
+        for (var i=0; i<20; i++) {
+		var t = localStorage.getItem("queue" + i);
+		if (t) {
+			window.localStorage.removeItem('queue' + i);
+			console.log("Cleaned queue "+i);
+		}
+
+	}
+
+
+
         loadPage();
       };
       window.addEventListener('resize', function() {
@@ -1383,13 +1411,13 @@ function terminal_send (str_) {
               lineCnt=5;
             if ((dataIn.charAt(i) == '-') && lineCnt==5) 
               lineCnt=6;
-            if ((dataIn.charAt(i) == 'P') && lineCnt==6) 
+            if ((dataIn.charAt(i) == 'D') && lineCnt==6) 
               lineCnt=7;
-            if ((dataIn.charAt(i) == 'L') && lineCnt==7) 
+            if ((dataIn.charAt(i) == 'A') && lineCnt==7) 
               lineCnt=8;
-            if ((dataIn.charAt(i) == 'O') && lineCnt==8) 
+            if ((dataIn.charAt(i) == 'T') && lineCnt==8) 
               lineCnt=9;
-            if ((dataIn.charAt(i) == 'T') && lineCnt==9) 
+            if ((dataIn.charAt(i) == 'A') && lineCnt==9) 
               lineCnt=10;
             if ((dataIn.charAt(i) == ':') && lineCnt==10) 
               lineCnt=11;
@@ -1403,17 +1431,28 @@ function terminal_send (str_) {
               }
             }
             if (lineCnt==13) {
-              console.log("BIPES Plot Packet End");
+              console.log("BIPES Data Packet End");
               console.log(lineIn);
               values=lineIn.split(',');
-              bipesAddPoint(parseInt(values[0]));
+	      var bipesID = parseInt(values[0]);
+	      var bipesValue = parseFloat(values[1]);
+	      console.log("ID = " + bipesID + " value= " +bipesValue);
+
+	      if ((bipesID) && (bipesValue)) {
+		      if ((Number.isInteger(bipesID)) && (Number.isInteger(bipesValue))) {
+			let q = new Queue(bipesID);
+			q.enqueue(bipesValue);
+		      }
+	      }
+
+              //bipesAddPoint(parseInt(values[0]));
               //chart.series[0].addPoint(values[0])
               //chart.series[1].addPoint(values[1])
               //chart.series[2].addPoint(values[2])
               lineCnt=0;
             }
             if (lineCnt==11) {
-              console.log("BIPES Plot Packet Start");
+              console.log("BIPES Data Packet Start");
               lineIn="";
               lineCnt=12;
             }
@@ -1620,6 +1659,21 @@ BIPES
   function closeModal() {
     modal.style.display = "none";
   }
+
+function test() {
+let q = new Queue(2);
+for (let i = 1; i <= 7; i++) {
+    q.enqueue(i);
+}
+
+//console.log(q.peek()); // 1
+console.log(q.length()); // 7
+//while (!q.isEmpty()) {
+//    console.log(q.dequeue());
+//}
+}
+
+
   function loadPage() {
     var x = getCookieModal('BIPES_Splash');
     if (x) {
