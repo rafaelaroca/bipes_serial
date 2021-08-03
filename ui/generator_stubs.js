@@ -232,7 +232,6 @@ Blockly.Python['gpio_interrupt_off'] = function(block) {
 };
 
 
-
 /// Pinout
 Blockly.Python['pinout'] = function(block) {
   var pin = block.getFieldValue('PIN');
